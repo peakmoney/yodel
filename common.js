@@ -1,0 +1,1 @@
+var common = module.exports = {};
