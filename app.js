@@ -7,6 +7,7 @@ var common = require('./common')
     if (err) { return blpopSubscribe(); }
     common.models.Device.subscribe(data, blpopSubscribe);
   });
+  console.log('listening to stentor:subscribe');
 })();
 
 (function blpopUnsubscribe() {
@@ -15,6 +16,7 @@ var common = require('./common')
     if (err) { return blpopUnubscribe(); }
     common.models.Device.unsubscribe(data, blpopUnubscribe);
   });
+  console.log('listening to stentor:unsubscribe');
 })();
 
 (function blpopNotify() {
@@ -23,4 +25,5 @@ var common = require('./common')
     if (err) { return blpopNotify(); }
     common.models.Device.notify(data, blpopNotify);
   });
+  console.log('listening to stentor:notify');
 })();
