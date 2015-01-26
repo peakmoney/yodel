@@ -13,8 +13,8 @@ var common = require('./common')
 (function blpopUnsubscribe() {
   redis.blpop('stentor:unsubscribe', 0, function(err, data){
     console.log('stentor:unsubscribe blpop data', data);
-    if (err) { return blpopUnubscribe(); }
-    common.models.Device.unsubscribe(data, blpopUnubscribe);
+    if (err) { return blpopUnsubscribe(); }
+    common.models.Device.unsubscribe(data, blpopUnsubscribe);
   });
   console.log('listening to stentor:unsubscribe');
 })();
