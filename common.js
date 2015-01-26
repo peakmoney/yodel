@@ -27,5 +27,8 @@ common.knex = {
   , timezone: config('mysql').timezone || 'Z'
 }}
 
+common.models = {
+  Device: require('./models/device')
+}
 
 common.redis = require("redis").createClient();
