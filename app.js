@@ -1,7 +1,12 @@
 var common = require('./common')
   , redis  = common.redis;
 
-(function blpopSubscribe() {
+(function blpopSubscribe(error) {
+
+  if (error) {
+    console.log(error);
+  }
+
   redis.blpop('stentor:subscribe', 0, function(err, data){
     console.log('stentor:subscribe blpop data', data);
     if (err) { return blpopSubscribe(); }
