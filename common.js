@@ -26,3 +26,6 @@ common.knex = {
   , database: config('mysql').database
   , timezone: config('mysql').timezone || 'Z'
 }}
+
+
+common.redis = require("redis").createClient();

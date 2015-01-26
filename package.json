@@ -4,7 +4,6 @@
   "description": "A lightweight server to simplify Android and iOS push notifications",
   "author": "Rob Scott",
   "dependencies": {
-    "express": "4.11.x",
     "mysql": "2.5.x",
     "knex": "0.7.x",
     "redis": "0.12.x",
