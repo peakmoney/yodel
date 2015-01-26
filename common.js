@@ -28,7 +28,3 @@ common.knex = {
 }}
 
 common.redis = require("redis").createClient();
-
-common.models = {
-  Device: require('./models/device')
-}
