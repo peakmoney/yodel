@@ -10,8 +10,8 @@ var testDevice = {
 };
 
 (function subscribe() {
-  redis.lpush('stentor:unsubscribe', JSON.stringify(testDevice), function(err, data){
-    console.log('stentor:unsubscribe lpush data', data);
+  redis.lpush('stentor:subscribe', JSON.stringify(testDevice), function(err, data){
+    console.log('stentor:subscribe lpush data', data);
     
     if (err) { 
       console.log(err);
