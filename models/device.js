@@ -20,7 +20,7 @@ Device.platforms = {
 
 Device.subscribe = function(opts, callback) {
 
-  if (validateSubscriptionOpts(opts, callback)) {
+  if (validateSubscribeOpts(opts, callback)) {
     console.log("Valid subscribe opts");
 
     try {
@@ -36,8 +36,8 @@ Device.subscribe = function(opts, callback) {
         .update({
           updated_at: new Date()
         })
-        .then(function(updates) {
-          if (updates === 0) {
+        .then(function(rows) {
+          if (rows === 0) {
             knex('devices').insert({
               user_id: opts.user_id,
               token: opts.token,
@@ -52,7 +52,7 @@ Device.subscribe = function(opts, callback) {
               return callback(err)
             });
           } else {
-            console.log(updates + " new device(s) updated");
+            console.log(rows + " new device(s) updated");
             return callback();
           }
         })
@@ -67,9 +67,31 @@ Device.subscribe = function(opts, callback) {
 }
 
 Device.unsubscribe = function(opts, callback) {
-  if (validateSubscriptionOpts(opts, callback)) {
+  if (validateUnsubscribeOpts(opts, callback)) {
     console.log("Valid unsubscribe opts");
-    return callback();
+    
+    try {
+
+      if (!knex) {
+        return callback("MySQL connection not established");
+      }
+
+      knex('devices')
+        .where({ 
+          user_id: opts.user_id,
+          token: opts.token })
+        .del()
+        .then(function(rows) {
+          console.log(rows + " device(s) deleted");
+          return callback();
+        })
+        .catch(function(err) {
+          return callback(err);
+        });
+
+    } catch(err) {
+      return callback(err);
+    }
   }
 }
 
@@ -78,7 +100,7 @@ Device.notify = function(opts, callback) {
 }
 
 
-function validateSubscriptionOpts(opts, callback) {
+function validateSubscribeOpts(opts, callback) {
   var valid = true;
   if (!opts.user_id || isNaN(opts.user_id)) {
     valid = false;
@@ -92,3 +114,17 @@ function validateSubscriptionOpts(opts, callback) {
   }
   return valid;
 }
+
+function validateUnsubscribeOpts(opts, callback) {
+  var valid = true;
+  if (!opts.user_id || isNaN(opts.user_id)) {
+    valid = false;
+    return callback("Invalid or missing option: user_id");
+  } else if (!opts.token) {
+    valid = false;
+    return callback("Invalid or missing option: token");
+  }
+
+  return valid;
+}
+
