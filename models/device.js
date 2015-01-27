@@ -19,9 +19,6 @@ Device.platforms = {
 
 
 Device.subscribe = function(opts, callback) {
-  if (opts instanceof Array) {
-    opts = JSON.parse(opts[1]);
-  }
 
   if (validateSubscriptionOpts(opts, callback)) {
     console.log("Valid subscribe opts");
