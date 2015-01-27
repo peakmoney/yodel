@@ -4,7 +4,7 @@ var Device = module.exports = function(attrs){
   }
 }
   , common = require('../common')
-  , knex = common.knex;
+  , knex = require('knex')(common.knex);
 
 Device.platforms = {
   1: 'android'
@@ -26,18 +26,40 @@ Device.subscribe = function(opts, callback) {
 
     try {
 
-      knex('devices').insert({
-        user_id: opts.user_id,
-        token: opts.token,
-        platform: Device.platforms[opts.platform],
-        created_at: new Date(),
-        updated_at: new Date()
-      }).then(function(inserts) {
-        console.log(inserts.length + ' new device(s) saved');
-        return callback();
-      }).catch(function(err) {
-        return callback(err);
-      });
+      if (!knex) {
+        callback("Database connection not established");
+      }
+
+      knex('devices')
+        .where({ 
+          user_id: opts.user_id,
+          token: opts.token })
+        .update({
+          updated_at: new Date()
+        })
+        .then(function(updates) {
+          console.log(updates);
+          if (updates === 0) {
+            knex('devices').insert({
+              user_id: opts.user_id,
+              token: opts.token,
+              platform: Device.platforms[opts.platform],
+              created_at: new Date(),
+              updated_at: new Date()
+            })
+            .then(function(inserts) {
+              console.log(inserts.length + " new device(s) saved");
+              return callback();
+            }).catch(function(err) {
+              return callback(err)
+            });
+          } else {
+            console.log(updates + " new device(s) updated");
+          }
+        })
+        .catch(function(err) {
+          return callback(err);
+        });
 
     } catch(err) {
       return callback(err);

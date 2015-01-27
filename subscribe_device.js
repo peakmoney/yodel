@@ -4,7 +4,7 @@ var common = require('./common')
   , redis  = common.redis;
 
 var testDevice = {
-  user_id: 1234,
+  user_id: 12344,
   token: "asdf132456",
   platform: "android"
 };
