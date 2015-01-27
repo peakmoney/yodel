@@ -17,6 +17,7 @@ function listenTo(channels) {
   }
 
   function continuousBlpop(key) {
+
     var method = channels[key];
     if (typeof method === 'undefined') {
       throw new Error("Invalid method for key: "+key);

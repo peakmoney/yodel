@@ -27,7 +27,7 @@ Device.subscribe = function(opts, callback) {
     try {
 
       if (!knex) {
-        callback("Database connection not established");
+        return callback("MySQL connection not established");
       }
 
       knex('devices')
@@ -38,7 +38,6 @@ Device.subscribe = function(opts, callback) {
           updated_at: new Date()
         })
         .then(function(updates) {
-          console.log(updates);
           if (updates === 0) {
             knex('devices').insert({
               user_id: opts.user_id,
@@ -55,6 +54,7 @@ Device.subscribe = function(opts, callback) {
             });
           } else {
             console.log(updates + " new device(s) updated");
+            return callback();
           }
         })
         .catch(function(err) {
