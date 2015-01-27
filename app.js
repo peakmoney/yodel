@@ -1,49 +1,46 @@
-var common      = require('./common')
-  , _           = require('lodash')
-  , redis       = common.redis
-  , DeviceModel = require('./models/device');
+var common  = require('./common')
+  , cluster = require('cluster')
+  , program = require('commander');
 
 
-listenTo({
-  'stentor:subscribe':   DeviceModel.subscribe
-, 'stentor:unsubscribe': DeviceModel.unsubscribe
-, 'stentor:notify':      DeviceModel.notify
-})
+program
+  .option('-e, --environment <env>', 'Node Environment (defaults to development)')
+  .option('-w, --workers <n>', 'Number of workers (defaults to number of CPUs)', parseInt)
+  .parse(process.argv);
 
 
-function listenTo(channels) {
-  for (var key in channels) {
-    if (typeof channels[key] === 'undefined') {
-      throw new Error("Invalid method for key: "+key);
-    }
+if (program.environment) {
+  process.env.NODE_ENV = program.environment;
+}
+
+var numWorkers = parseInt(program.workers) || require('os').cpus().length;
+
+if (cluster.isMaster) {
+  // Fork workers. One per CPU for maximum effectiveness
+  for (var i = 0; i < numWorkers; i++) {
+    cluster.fork();
   }
 
-  redis.blpop(_.keys(channels).concat([0]), function(err, data) {
-    if (err) { 
-      console.error('error from blpop:', err);
-      return listenTo(channels);
-    }
+  cluster.on('exit', function(deadWorker, code, signal) {
+    // Restart the worker
+    var worker = cluster.fork();
 
-    if (!Array.isArray(data) || typeof data[0] !== 'string' || typeof data[1] !== 'string') {
-      console.error('unexpected data format:', data);
-      return listenTo(channels);
-    }
+    // Note the process IDs
+    var newPID = worker.process.pid;
+    var oldPID = deadWorker.process.pid;
 
-    var key    = data[0]
-      , method = channels[key];
+    // Log the event
+    console.log('worker '+oldPID+' died.');
+    console.log('worker '+newPID+' born.');
+  });
 
-    try {
-      var parsedData = JSON.parse(data[1]);
-    } catch (e) {
-      console.error('invalid JSON on '+key+':', data[1]);
-      return listenTo(channels);
-    }
+} else {
+  var DeviceModel   = require('./lib/models/device')
+    , RedisListener = require('./lib/listeners/redis');
 
-    console.log('data received on '+key+':', parsedData);
-
-    method(parsedData, function(err) {
-      if (err) { console.error("Error calling method for key: "+key, err); }
-      return listenTo(channels);
-    });
+  RedisListener.listen({
+    'stentor:subscribe':   DeviceModel.subscribe
+  , 'stentor:unsubscribe': DeviceModel.unsubscribe
+  , 'stentor:notify':      DeviceModel.notify
   });
 }
