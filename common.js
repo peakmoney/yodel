@@ -18,13 +18,5 @@ var config = common.config = function config(name) {
   return configCache[name] = conf;
 };
 
-common.knex = { 
-  dialect: 'mysql', connection: {
-    host:     config('mysql').host
-  , user:     config('mysql').user
-  , password: config('mysql').password
-  , database: config('mysql').database
-  , timezone: config('mysql').timezone || 'Z'
-}}
-
+common.knex = require('knex')(config('knexfile'));
 common.redis = require("redis").createClient();

@@ -1,10 +1,13 @@
+var common = require('../common')
+  , knex   = common.knex;
+
+
 var Device = module.exports = function(attrs){
   for (var k in attrs) {
     this[k] = attrs[k];
   }
-}
-  , common = require('../common')
-  , knex = require('knex')(common.knex);
+};
+
 
 Device.platforms = {
   1: 'android'
@@ -16,7 +19,6 @@ Device.platforms = {
 
 
 Device.subscribe = function(opts, callback) {
-  
   if (opts instanceof Array) {
     opts = JSON.parse(opts[1]);
   }
