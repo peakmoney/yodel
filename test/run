@@ -1,0 +1,55 @@
+#!/usr/bin/env node
+var fs           = require('fs')
+  , spawn        = require('child_process').spawn
+  , filenames    = fs.readdirSync(process.cwd()+"/test/vows")
+  , spec         = require("vows/lib/vows/reporters/spec")
+  , totalResults = {honored: 0, broken: 0, errored: 0};
+
+process.env.NODE_ENV = 'test';
+
+var app = spawn('node', ['app', '-e', 'test'])
+
+process.on('SIGINT', exit);
+process.on('SIGTERM', exit);
+process.on('exit', exit);
+app.stdout.pipe(process.stdout);
+app.stderr.pipe(process.stderr);
+
+function exit(code) {
+  app.kill();
+  process.exit(code);
+}
+
+var runOpts = {};
+if (process.argv[2] != 'concise') {
+  runOpts['reporter'] = spec;
+  if (process.argv.length > 2) {
+    filenames = process.argv.slice(2);
+  }
+}
+
+setTimeout(function() {
+  (function runTests(i) {
+    if (i >= filenames.length) {
+      console.error("Test Results: ", totalResults);
+      exit(totalResults['broken'] + totalResults['errored']);
+    }
+
+    var filename = filenames[i];
+    if (filename.indexOf('test/vows') == 0) {
+      filename = filename.replace('test/vows', '');
+    }
+
+    // Helps for weird things like .DS_Store
+    if (filename.indexOf('.js') == -1 ) {
+      return runTests(i+=1);
+    }
+
+    require('./vows/'+filename).run(runOpts, function(results) {
+      totalResults['honored'] += results['honored'];
+      totalResults['broken']  += results['broken'];
+      totalResults['errored'] += results['errored'];
+      runTests(i+=1);
+    });
+  })(0);
+}, 500);

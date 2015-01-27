@@ -2,12 +2,14 @@ var common      = module.exports = {}
   , configCache = {}
   , env         = process.env.NODE_ENV || 'development';
 
-var config = common.config = function config(name) {
+var config = common.config = function config(name, allowBlank) {
   if (configCache[name]) { return configCache[name]; }
 
-  var conf = require('./config/'+name);
-  if (!conf) {
-    throw new Error("File not found: config/"+name);
+  try {
+    var conf = require('./config/'+name);
+  } catch (e) {
+    if (allowBlank) { return {}; }
+    throw e;
   }
 
   conf = conf[env];
@@ -19,4 +21,16 @@ var config = common.config = function config(name) {
 };
 
 common.knex = require('knex')(config('knexfile'));
-common.redis = require("redis").createClient();
+
+var redisConfig = config('redis', true);
+redisConfig.port = redisConfig.port || 6379;
+redisConfig.host = redisConfig.host || '127.0.0.1';
+// Don't want to overwrite any data in a database for another env
+if (env == 'test' && typeof redisConfig.database === 'undefined') {
+  redisConfig.database = 5;
+}
+
+common.redis = require("redis").createClient(redisConfig.port, redisConfig.host, redisConfig.options);
+if (!isNaN(redisConfig.database)) {
+  common.redis.select(redisConfig.database);
+}
