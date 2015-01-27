@@ -4,14 +4,14 @@ var common = require('./common')
   , redis  = common.redis;
 
 var testDevice = {
-  user_id: 12344,
+  user_id: 1234,
   token: "asdf132456",
   platform: "android"
 };
 
 (function subscribe() {
-  redis.lpush('stentor:subscribe', JSON.stringify(testDevice), function(err, data){
-    console.log('stentor:subscribe lpush data', data);
+  redis.lpush('stentor:unsubscribe', JSON.stringify(testDevice), function(err, data){
+    console.log('stentor:unsubscribe lpush data', data);
     
     if (err) { 
       console.log(err);
