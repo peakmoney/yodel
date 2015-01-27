@@ -20,18 +20,17 @@ function listenTo(channels) {
 
   redis.blpop(_.keys(channels).concat([0]), function(err, data) {
     if (err) { 
-      console.error('error from blpop on '+key+':', err);
+      console.error('error from blpop:', err);
       return listenTo(channels);
     }
-
-    console.log(key+' blpop data', data);
 
     if (!Array.isArray(data) || typeof data[0] !== 'string' || typeof data[1] !== 'string') {
-      console.error('unexpected data format on '+key+':', data);
+      console.error('unexpected data format:', data);
       return listenTo(channels);
     }
 
-    var method = channels[data[0]];
+    var key    = data[0]
+      , method = channels[key];
 
     try {
       var parsedData = JSON.parse(data[1]);
@@ -39,6 +38,8 @@ function listenTo(channels) {
       console.error('invalid JSON on '+key+':', data[1]);
       return listenTo(channels);
     }
+
+    console.log('data received on '+key+':', parsedData);
 
     method(parsedData, function(err) {
       if (err) { console.error("Error calling method for key: "+key, err); }
