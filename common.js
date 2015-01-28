@@ -8,7 +8,7 @@ var config = common.config = function config(name, allowBlank) {
   try {
     var conf = require('./config/'+name);
   } catch (e) {
-    if (allowBlank) { return {}; }
+    if (allowBlank) { return null; }
     throw e;
   }
 
@@ -22,7 +22,7 @@ var config = common.config = function config(name, allowBlank) {
 
 common.knex = require('knex')(config('knexfile'));
 
-var redisConfig = config('redis', true);
+var redisConfig = config('redis', true) || {};
 redisConfig.port = redisConfig.port || 6379;
 redisConfig.host = redisConfig.host || '127.0.0.1';
 // Don't want to overwrite any data in a database for another env
@@ -33,4 +33,16 @@ if (env == 'test' && typeof redisConfig.database === 'undefined') {
 common.redis = require("redis").createClient(redisConfig.port, redisConfig.host, redisConfig.options);
 if (!isNaN(redisConfig.database)) {
   common.redis.select(redisConfig.database);
+}
+
+common.notifyError = function() {};
+
+if (config('sentry')) {
+  var raven = require('raven');
+  var ravenClient = new raven.Client(config('sentry').dsn);
+  ravenClient.patchGlobal();
+  common.notifyError = function(err, callback) {
+    if (!(err instanceof Error)) { err = new Error(err); }
+    ravenClient.captureError(err, callback);
+  }
 }

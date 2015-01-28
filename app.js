@@ -39,8 +39,8 @@ if (cluster.isMaster) {
     , RedisListener = require('./lib/listeners/redis');
 
   RedisListener.listen({
-    'stentor:subscribe':   DeviceModel.subscribe
-  , 'stentor:unsubscribe': DeviceModel.unsubscribe
-  , 'stentor:notify':      DeviceModel.notify
+    'yodel:subscribe':   DeviceModel.subscribe
+  , 'yodel:unsubscribe': DeviceModel.unsubscribe
+  , 'yodel:notify':      DeviceModel.notify
   });
 }

@@ -1,0 +1,2 @@
+#!/bin/bash
+./node_modules/knex/lib/bin/cli.js migrate:latest

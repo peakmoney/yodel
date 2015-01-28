@@ -26,10 +26,10 @@ var testNotification = {
 
 if (task === 'subscribe') {
   (function subscribe() {
-    redis.lpush('stentor:subscribe', JSON.stringify(testDevice), function(err, data){
-      console.log('stentor:subscribe lpush data', data);
-      
-      if (err) { 
+    redis.lpush('yodel:subscribe', JSON.stringify(testDevice), function(err, data){
+      console.log('yodel:subscribe lpush data', data);
+
+      if (err) {
         console.log(err);
       }
 
@@ -39,10 +39,10 @@ if (task === 'subscribe') {
 
 } else if (task === 'notify') {
   (function notify() {
-    redis.lpush('stentor:notify', JSON.stringify(testNotification), function(err, data){
-      console.log('stentor:notify lpush data', data);
-      
-      if (err) { 
+    redis.lpush('yodel:notify', JSON.stringify(testNotification), function(err, data){
+      console.log('yodel:notify lpush data', data);
+
+      if (err) {
         console.log(err);
       }
 

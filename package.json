@@ -1,5 +1,5 @@
 {
-  "name": "node-push",
+  "name": "yodel",
   "version": "0.0.1",
   "description": "A lightweight server to simplify Android and iOS push notifications",
   "contributors": [
@@ -7,13 +7,15 @@
     "Brian Bowden"
   ],
   "scripts": {
-    "test": "test/run"
+    "test": "test/run",
+    "start": "node app.js"
   },
   "dependencies": {
     "mysql": "2.5.x",
     "knex": "0.7.x",
     "redis": "0.12.x",
     "node-gcm": "0.9.x",
+    "raven": "0.7.x",
     "apn": "1.6.x",
     "lodash": "3.0.x",
     "commander": "2.6.0"

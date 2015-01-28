@@ -7,9 +7,9 @@ var vows       = require('vows')
 
 module.exports = vows.describe('Subscribe').addBatch(resetBatch).addBatch({
 
-  'Redis rpush stentor:subscribe {user_id: 5, token: "sample", platform: "ios"}': {
+  'Redis rpush yodel:subscribe {user_id: 5, token: "sample", platform: "ios"}': {
     topic: function() {
-      common.redis.rpush("stentor:subscribe"
+      common.redis.rpush("yodel:subscribe"
         , JSON.stringify({user_id: 5, token: "sample", platform: "ios"})
         , this.callback);
     }
