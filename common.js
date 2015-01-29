@@ -3,17 +3,21 @@ var common      = module.exports = {}
   , env         = process.env.NODE_ENV || 'development';
 
 var config = common.config = function config(name, allowBlank) {
-  if (configCache[name]) { return configCache[name]; }
+  if (typeof configCache[name] !== 'undefined') { return configCache[name]; }
 
   try {
     var conf = require('./config/'+name);
   } catch (e) {
-    if (allowBlank) { return null; }
+    if (allowBlank) { return configCache[name] = null; }
     throw e;
   }
 
   conf = conf[env];
   if (!conf) {
+    if (allowBlank) {
+      console.error(name+" config not specified for "+env+" environment");
+      return configCache[name] = null;
+    }
     throw new Error(env+" enviroment not specified for config/"+name);
   }
 
@@ -35,9 +39,11 @@ if (!isNaN(redisConfig.database)) {
   common.redis.select(redisConfig.database);
 }
 
-common.notifyError = function() {};
+common.notifyError = function(err) {
+  console.error(err);
+};
 
-if (config('sentry')) {
+if (config('sentry', true)) {
   var raven = require('raven');
   var ravenClient = new raven.Client(config('sentry').dsn);
   ravenClient.patchGlobal();
