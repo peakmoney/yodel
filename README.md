@@ -31,7 +31,7 @@ module.exports = {
     connection: {
       "user": "root"
     , "password": "test"
-    , "database": "stentor_dev"
+    , "database": "yodel_dev"
     }
   }
 };
