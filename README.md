@@ -1,4 +1,5 @@
-# Yodel
+![Yodel Logo](http://i.imgur.com/EeuiYac.png)
+
 A lightweight Android and iOS push notification server that reads from a simple 
 Redis API and delivers notifications via GCM and APN.
 
@@ -31,7 +32,7 @@ module.exports = {
     connection: {
       "user": "root"
     , "password": "test"
-    , "database": "stentor_dev"
+    , "database": "yodel_dev"
     }
   }
 };
