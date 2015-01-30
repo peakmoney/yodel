@@ -37,11 +37,9 @@ module.exports = vows.describe('Subscribe').addBatch(resetBatch).addBatch({
         results.should.have.lengthOf(1);
       }
 
-    , 'results.0.created_at should be within 1s': function(results) {
-        var createdAt    = helpers.nestedProperty(results, '0.created_at').getTime()
-          , oneSecondAgo = new Date().getTime() - (1 * 1000);
-
-        oneSecondAgo.should.be.lessThan(createdAt);
+    , 'results.0.created_at should be within 2s': function(results) {
+        var createdAt = helpers.nestedProperty(results, '0.created_at').getTime();
+        createdAt.should.be.approximately(new Date().getTime(), 2000);
       }
     }
   }
