@@ -48,6 +48,47 @@ module.exports = vows.describe('Subscribe').addBatch(resetBatch).addBatch({
 }).addBatch({
 
 
+  'Redis rpush yodel:notify {user_id: 5, message: "Sample message", payload: {other: "attribute"}}': {
+    topic: function() {
+      common.redis.rpush("yodel:notify"
+        , JSON.stringify({user_id: 5, message: "Sample message", payload: {other: "attribute"}})
+        , this.callback);
+    }
+
+  , 'Result should be 1': function(result) {
+      should.equal(result, 1);
+    }
+
+
+  , '> Redis lpop yodel:push after 500ms': {
+      topic: function() {
+        var cb = this.callback;
+        setTimeout(function() {
+          common.redis.lpop("yodel:push", function(err, result) {
+            if (err) { return cb(err); }
+            cb(null, JSON.parse(result));
+          });
+        }, 500);
+      }
+
+    , 'aps.alert should be "Sample message"': function(result) {
+        helpers.nestedProperty(result, {'aps.alert': 'Sample message'});
+      }
+
+    , 'aps.badge should be 1': function(result) {
+        helpers.nestedProperty(result, {'aps.badge': 1});
+      }
+
+    , 'other should be "attribute"': function(result) {
+        helpers.nestedProperty(result, {'other': "attribute"});
+      }
+    }
+  }
+
+
+}).addBatch({
+
+
   'Redis rpush yodel:unsubscribe {user_id: 5, token: "sample", platform: "ios"}': {
     topic: function() {
       common.redis.rpush("yodel:unsubscribe"

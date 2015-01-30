@@ -42,4 +42,6 @@ if (cluster.isMaster) {
   , 'yodel:unsubscribe': DeviceModel.unsubscribe
   , 'yodel:notify':      DeviceModel.notify
   });
+
+  console.log('Listening to yodel:subscribe, yodel:unsubscribe, and yodel:notify');
 }
