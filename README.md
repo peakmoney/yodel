@@ -23,62 +23,23 @@ rpush yodel:notify '{"user_id":5, "message":"This is a test", "payload": {"sampl
 ```
 
 ## Getting Started
-Yodel is meant to run as an independent Node service on Node 0.10.x and above. After cloning the
-repository, add the following files in a config folder within the root project directory:
+Yodel is meant to run as an independent Node service on Node 0.10.x and above. It 
+requires connections to Redis and MySQL servers.
 
-##### knexfile.js (required)
-```javascript
-module.exports = {
-  development: {
-    client: 'mysql',
-    connection: {
-      "user": "root"
-    , "password": "test"
-    , "database": "yodel_dev"
-    }
-  }
-};
-```
+### Adding Config Files
+Of the 5 supported config files, only 1 is required. All have corresponding sample 
+files in the config directory.
 
-##### redis.json (optional)
-```json
-{
-  "development": {
-    "host": "127.0.0.1",
-    "port": 6379,
-    "database": 1
-  }
-}
-```
+* knexfile.js (required)
+* redis.json (optional)
+* apn.json (optional)
+* gcm.json (optional)
+* sentry.json (optional)
 
-##### apn.json (optional)
-```json
-{
-  "development": {
-    "cert": "sample cert or path to cert.pem",
-    "key": "sample key or path to key.pem"
-  }
-}
-```
+When writing apn.json, keep in mind that all of the options in that file are passed directly
+to the [node-apn](https://github.com/argon/node-apn) package. You can see a [list of supported options](https://github.com/argon/node-apn/blob/master/doc/connection.markdown) in their documentation.
 
-##### gcm.json (optional)
-```json
-{
-  "development": {
-    "server_api_key": "sample"
-  }
-}
-```
-
-##### sentry.json (optional)
-```json
-{
-  "development": {
-    "dsn": "https://..."
-  }
-}
-```
-
+### DB and Package Setup
 Ensure that you have MySQL and Redis running, and that you're MySQL server has a database 
 matching you're knexfile. At that point, install npm packages and run the DB migration:
 
@@ -87,8 +48,27 @@ npm install
 tasks/migrate
 ```
 
-You should be ready to start yodel now:
+### Starting Yodel
+You should be ready to start Yodel now. At the most basic level, that can be accomplished
+with the following command.
 
 ```
-npm start
+node app.js
+```
+
+Yodel does also support the following options:
+```
+    -h, --help               output usage information
+    -e, --environment <env>  Node Environment (defaults to development)
+    -w, --workers <n>        Number of workers (defaults to number of CPUs)
+```
+
+
+## Import Devices from Urban Airship
+
+Yodel includes a basic import script for Urban Airship. It relies on your aliases being 
+integers. If you need to parse a different alias format, it should be relatively easy
+to modify.
+```
+tasks/import_from_urban_airship -k ua_app_key -m ua_master_secret -e development
 ```
