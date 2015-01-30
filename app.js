@@ -1,5 +1,4 @@
-var common  = require('./common')
-  , cluster = require('cluster')
+var cluster = require('cluster')
   , program = require('commander');
 
 
@@ -13,7 +12,7 @@ if (program.environment) {
   process.env.NODE_ENV = program.environment;
 }
 
-var numWorkers = parseInt(program.workers) || require('os').cpus().length;
+var numWorkers = program.workers || require('os').cpus().length;
 
 if (cluster.isMaster) {
   // Fork workers. One per CPU for maximum effectiveness

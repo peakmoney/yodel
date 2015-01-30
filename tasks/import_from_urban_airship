@@ -1,0 +1,93 @@
+#!/usr/bin/env node
+var program = require('commander')
+  , https   = require('https')
+  , url     = require('url');
+
+program
+  .option('-e, --environment <env>', 'Node Environment (defaults to development)')
+  .option('-k, --key <key>', 'Urban Airship "App Key"')
+  .option('-m, --master <secret>', 'Urban Airship "App Master Secret"')
+  .parse(process.argv);
+
+process.env.NODE_ENV = program.environment || "development";
+
+if (typeof program.key == 'undefined') {
+  throw new Error('Missing Option: -k (Urban Airship "App Key")');
+} else if (typeof program.master == 'undefined') {
+  throw new Error('Missing Option: -s (Urban Airship "App Master Secret")');
+}
+
+var knex = require('knex')(require('../knexfile')[process.env.NODE_ENV])
+  , auth = new Buffer(program.key + ":" + program.master, "utf8").toString("base64")
+  , page = 0;
+
+(function requestChannels(path) {
+  console.log('Requesting page '+(++page));
+
+  var requestOpts = {
+    "host": "go.urbanairship.com"
+  , "port": 443
+  , "path": path
+  , "method": "GET"
+  , "headers": {
+      "Authorization": "Basic " + auth
+    , "User-Agent": "yodel"
+    , "Accept": "application/vnd.urbanairship+json; version=3;"
+    }
+  };
+
+  var responseData = "";
+
+  var request = https.request(requestOpts, function(response) {
+    response.setEncoding("utf8");
+    response.on("data", function(chunk) { responseData += chunk; });
+    response.on("error", function(error) { throw new Error(error); });
+
+    response.on("end", function() {
+      if (response.statusCode != 200) {
+        throw new Error(responseData);
+      } else {
+        responseData = JSON.parse(responseData);
+        var insertValues = [];
+        responseData["channels"].forEach(function(channel) {
+          if (validChannel(channel)) {
+            insertValues.push(
+              knex.raw("(?, ?, ?, ?, ?)", [
+                parseInt(channel['alias'])
+              , channel['push_address']
+              , (channel["device_type"] == 'android' ? 1 : 2)
+              , new Date()
+              , new Date(channel["created"])
+              ]).toString()
+            );
+          }
+        });
+        var query = "INSERT IGNORE INTO devices"+
+                    " (user_id, token, platform, updated_at, created_at)"+
+                    " VALUES "+insertValues.join(",");
+
+        knex.raw(query).exec(function(err, results) {
+          if (err) { throw new Error(err); }
+          if (results && results[0] && typeof results[0].affectedRows != 'undefined') {
+            console.log(results[0].affectedRows+" rows inserted");
+          }
+          if (responseData["next_page"]) {
+            requestChannels(url.parse(responseData["next_page"]).path);
+          } else {
+            process.exit();
+          }
+        });
+      }
+    });
+  });
+
+  request.on("error", function(error) { throw new Error(error); });
+  request.end();
+})("/api/channels/");
+
+
+function validChannel(channel) {
+  return channel['alias'] && !isNaN(channel['alias'])
+    && ['ios', 'android'].indexOf(channel['device_type']) >= 0
+    && channel['push_address'];
+}
