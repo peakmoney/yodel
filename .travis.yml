@@ -8,7 +8,7 @@ before_script:
   - npm install
   - mysql -e 'create database yodel_test;'
   - cp config/knexfile.sample.js config/knexfile.js
-  - NODE_ENV=tasks/migrate
+  - NODE_ENV=test tasks/migrate
 
 services:
   - redis-server
