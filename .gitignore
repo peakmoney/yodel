@@ -28,7 +28,12 @@ node_modules
 .lock-wscript
 
 # Config directory
-config
+config/*
+!config/apn.sample.json
+!config/gcm.sample.json
+!config/knexfile.sample.js
+!config/sentry.sample.json
+!config/redis.sample.json
 
 # Stupid Macs
 .DS_store
