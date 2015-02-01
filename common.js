@@ -48,8 +48,8 @@ common.publishEvent = function(event, callback) {
 
 if (config('redis_events', true)) {
   var redis = newRedisClient('redis_events');
-  common.publishEvent = function(stats, callback) {
-    redis.publish("yodel:events", JSON.stringify(stats), callback);
+  common.publishEvent = function(event, callback) {
+    redis.publish("yodel:events", JSON.stringify(event), callback);
   }
 }
 
