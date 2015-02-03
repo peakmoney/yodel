@@ -25,7 +25,6 @@ var config = common.config = function config(name, allowBlank) {
 };
 
 common.knex = require('knex')(config('knexfile'));
-common.redis = newRedisClient('redis');
 
 common.notifyError = function(err) {
   console.error(err);
@@ -46,14 +45,7 @@ common.publishEvent = function(event, callback) {
   return callback && callback();
 }
 
-if (config('redis_events', true)) {
-  var redis = newRedisClient('redis_events');
-  common.publishEvent = function(event, callback) {
-    redis.publish("yodel:events", JSON.stringify(event), callback);
-  }
-}
-
-function newRedisClient(configName) {
+common.newRedisClient = function(configName) {
   var rConfig = config(configName, true) || {};
   rConfig.port = rConfig.port || 6379;
   rConfig.host = rConfig.host || '127.0.0.1';
@@ -69,4 +61,13 @@ function newRedisClient(configName) {
   if (!isNaN(config.database)) { client.select(config.database); }
 
   return client;
+}
+
+common.redis = common.newRedisClient('redis');
+
+if (config('redis_events', true)) {
+  var redis = common.newRedisClient('redis_events');
+  common.publishEvent = function(event, callback) {
+    redis.publish("yodel:events", JSON.stringify(event), callback);
+  }
 }

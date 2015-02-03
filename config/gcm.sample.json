@@ -1,5 +1,6 @@
 {
   "development": {
-    "server_api_key": "sample"
+    "server_api_key": "sample",
+    "product_id": "sample"
   }
 }
