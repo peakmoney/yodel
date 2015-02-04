@@ -37,13 +37,11 @@ if (cluster.isMaster) {
   var DeviceModel   = require('./lib/models/device')
     , RedisListener = require('./lib/listeners/redis');
 
-  setTimeout(function() {
-    RedisListener.listen({
-      'yodel:subscribe':   DeviceModel.subscribe
-    , 'yodel:unsubscribe': DeviceModel.unsubscribe
-    , 'yodel:notify':      DeviceModel.notify
-    });
+  RedisListener.listen({
+    'yodel:subscribe':   DeviceModel.subscribe
+  , 'yodel:unsubscribe': DeviceModel.unsubscribe
+  , 'yodel:notify':      DeviceModel.notify
+  });
 
-    console.log('Listening to yodel:subscribe, yodel:unsubscribe, and yodel:notify');
-  }, 500);
+  console.log('Listening to yodel:subscribe, yodel:unsubscribe, and yodel:notify');
 }
