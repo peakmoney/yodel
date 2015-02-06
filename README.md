@@ -1,6 +1,6 @@
 <img align="right" alt="Build Status" src="https://travis-ci.org/SpireTeam/yodel.svg?branch=master">
 
-![Yodel Logo](http://i.imgur.com/EeuiYac.png)
+![Yodel Logo](http://i.imgur.com/iUCHOMU.png)
 
 A lightweight Android and iOS push notification server that reads from a simple 
 Redis API and delivers notifications via GCM and APN.
