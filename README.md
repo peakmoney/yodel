@@ -92,4 +92,4 @@ events to the `yodel:events` key. Those will be JSON strings in the following fo
 
 We've created a project to aggregate and display data from Yodel. Yodel Stats reads data
 from `yodel:events`, aggregates it in MySQL, and displays the data with a simple Express
-app. For more information, visit the [Yodel Stats repository](https://github.com/robscott/yodel-stats).
+app. For more information, visit the [Yodel Stats repository](https://github.com/SpireTeam/yodel-stats).
