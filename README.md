@@ -79,7 +79,7 @@ tasks/import_from_urban_airship -k ua_app_key -m ua_master_secret -e development
 If a `redis_events` config is present for the current environment, Yodel will publish 
 events to the `yodel:events` key. Those will be JSON strings in the following format:
 
-```json
+```
 {
     "user_id": 1,
     "action": "create_device|update_device|delete_device|notify",
