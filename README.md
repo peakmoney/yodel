@@ -67,7 +67,7 @@ Yodel does also support the following options:
 
 ## Android User Notification Options
 
-Yodel maintains an updated notification key for each user's Android devices. Once provided to the Android client, the notification key can be used to implement umpstream messaging. For more information on user notifications, check out the [official docs](http://developer.android.com/google/gcm/notifications.html) and this [handy guide](https://medium.com/@Bicx/adventures-in-android-user-notifications-e6568871d9be).
+Yodel maintains an updated notification key for each user's Android devices. Once provided to the Android client, the notification key can be used to implement GCM upstream messaging. For more information on user notifications, check out the [official docs](http://developer.android.com/google/gcm/notifications.html) and this [handy guide](https://medium.com/@Bicx/adventures-in-android-user-notifications-e6568871d9be).
 
 ##### Subscribe
 Add option `"push_notification_key":true` to have Yodel send a key-bearing push notification to the subscribed device. This notification will provide the `notification_key` as a data element for use on the client.
