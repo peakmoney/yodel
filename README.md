@@ -26,6 +26,8 @@ rpush yodel:notify '{"user_id":5, "message":"This is a test", "payload": {"sampl
 Yodel is meant to run as an independent Node service on Node 0.10.x and above. It 
 requires connections to Redis and MySQL servers.
 
+
+
 ### Adding Config Files
 Of the 5 supported config files, only 1 is required. All have corresponding sample 
 files in the config directory.
@@ -63,8 +65,23 @@ Yodel does also support the following options:
     -w, --workers <n>        Number of workers (defaults to number of CPUs)
 ```
 
+## Android User Notification Options
 
-## Import Devices from Urban Airship
+Yodel maintains an updated notification key for each user's Android devices. Once provided to the Android client, the notification key can be used to implement umpstream messaging. For more information on user notifications, check out the [official docs](http://developer.android.com/google/gcm/notifications.html) and this [handy guide](https://medium.com/@Bicx/adventures-in-android-user-notifications-e6568871d9be).
+
+##### Subscribe
+Setting `push_notification_key` to `true` causes a data-bearing push notification to be sent to the subscribed device. This notification contains the `notification_key` data element.
+```
+rpush yodel:subscribe '{"user_id":5, "token":"sample", "platform":"ios", "push_notification_key":true}'
+```
+
+##### Notify
+Setting `include_notification_key` to `true` causes the resulting push notification to include the `notification_key` element. This is useful when implementing cross-device notification dismissal.
+```
+rpush yodel:notify '{"user_id":5, "message":"This is a test", "payload": {"sample": "payload"}, "include_notification_key":true}'
+```
+
+## Importing Devices from Urban Airship
 
 Yodel includes a basic import script for Urban Airship. It relies on your aliases being 
 integers. If you need to parse a different alias format, it should be relatively easy
