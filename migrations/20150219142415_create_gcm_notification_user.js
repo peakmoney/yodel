@@ -2,7 +2,7 @@
 
 exports.up = function(knex, Promise) {
   return Promise.all([
-    knex.schema.createTable('gcm_notification_user', function(table) {
+    knex.schema.createTable('gcm_notification_users', function(table) {
       table.increments();
       table.integer('user_id').unsigned().notNullable();
       table.string('notification_key_name', 177).notNullable();
@@ -18,6 +18,6 @@ exports.up = function(knex, Promise) {
 
 exports.down = function(knex, Promise) {
   return Promise.all([
-    knex.schema.dropTableIfExists('gcm_notification_user')
+    knex.schema.dropTableIfExists('gcm_notification_users')
   ]);
 };
