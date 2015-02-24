@@ -18,11 +18,13 @@
     "node-gcm": "0.9.x",
     "randomstring": "^1.0.3",
     "raven": "0.7.x",
-    "redis": "0.12.x"
+    "redis": "0.12.x",
+    "yodel-gcm": "^0.9.20"
   },
   "devDependencies": {
-    "vows": "0.7.x",
-    "should": "4.6.x"
+    "node-inspector": "^0.9.1",
+    "should": "4.6.x",
+    "vows": "0.7.x"
   },
   "license": "Apache-2.0",
   "engine": "node >= 0.10.x"
