@@ -58,7 +58,7 @@ common.newRedisClient = function(configName) {
   var client = require("redis").createClient(
     rConfig.port, rConfig.host, rConfig.options);
 
-  if (!isNaN(config.database)) { client.select(config.database); }
+  if (!isNaN(rConfig.database)) { client.select(rConfig.database); }
 
   return client;
 }

@@ -29,11 +29,7 @@ node_modules
 
 # Config directory
 config/*
-!config/apn.sample.json
-!config/gcm.sample.json
-!config/knexfile.sample.js
-!config/sentry.sample.json
-!config/redis.sample.json
+!config/*.sample.*
 
 # Stupid Macs
 .DS_store

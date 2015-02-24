@@ -1,6 +1,6 @@
 <img align="right" alt="Build Status" src="https://travis-ci.org/SpireTeam/yodel.svg?branch=master">
 
-![Yodel Logo](http://i.imgur.com/EeuiYac.png)
+![Yodel Logo](http://i.imgur.com/iUCHOMU.png)
 
 A lightweight Android and iOS push notification server that reads from a simple 
 Redis API and delivers notifications via GCM and APN.
@@ -34,6 +34,7 @@ files in the config directory.
 
 * knexfile.js (required)
 * redis.json (optional)
+* redis_events.json (optional)
 * apn.json (optional)
 * gcm.json (optional)
 * sentry.json (optional)
@@ -99,3 +100,23 @@ to modify.
 ```
 tasks/import_from_urban_airship -k ua_app_key -m ua_master_secret -e development
 ```
+
+## Events
+
+If a `redis_events` config is present for the current environment, Yodel will publish 
+events to the `yodel:events` key. Those will be JSON strings in the following format:
+
+```
+{
+    "user_id": 1,
+    "action": "create_device|update_device|delete_device|notify",
+    "platform": "android|ios",
+    "successful": true|false
+}
+```
+
+![Yodel Stats Logo](http://i.imgur.com/6wmu6co.png)
+
+We've created a project to aggregate and display data from Yodel. Yodel Stats reads data
+from `yodel:events`, aggregates it in MySQL, and displays the data with a simple Express
+app. For more information, visit the [Yodel Stats repository](https://github.com/SpireTeam/yodel-stats).
