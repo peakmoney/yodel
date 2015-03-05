@@ -15,11 +15,10 @@
     "commander": "2.6.0",
     "knex": "0.7.x",
     "mysql": "2.5.x",
-    "node-gcm": "0.9.x",
     "randomstring": "^1.0.3",
     "raven": "0.7.x",
     "redis": "0.12.x",
-    "yodel-gcm": "^0.9.20"
+    "yodel-gcm": "^0.9.21"
   },
   "devDependencies": {
     "node-inspector": "^0.9.1",
