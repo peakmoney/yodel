@@ -1,6 +1,6 @@
 {
   "name": "yodel",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A lightweight server to simplify Android and iOS push notifications",
   "contributors": [
     "Rob Scott",
