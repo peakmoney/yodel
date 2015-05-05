@@ -19,14 +19,14 @@ module.exports = vows.describe('Subscribe').addBatch(resetBatch).addBatch({
     }
 
 
-  , '> Ensure that matching record exists in MySQL after 100ms': {
+  , '> Ensure that matching record exists in MySQL after 1s': {
       topic: function() {
         var callback = this.callback;
         setTimeout(function() {
           common.knex('devices')
             .where({user_id: 5, token: "sample", platform: 2})
             .exec(callback);
-        }, 500);
+        }, 1000);
       }
 
     , 'results should be an array': function(results) {
@@ -60,7 +60,7 @@ module.exports = vows.describe('Subscribe').addBatch(resetBatch).addBatch({
     }
 
 
-  , '> Redis lpop yodel:push after 500ms': {
+  , '> Redis lpop yodel:push after 1s': {
       topic: function() {
         var cb = this.callback;
         setTimeout(function() {
@@ -68,7 +68,7 @@ module.exports = vows.describe('Subscribe').addBatch(resetBatch).addBatch({
             if (err) { return cb(err); }
             cb(null, JSON.parse(result));
           });
-        }, 500);
+        }, 1000);
       }
 
     , 'aps.alert should be "Sample message"': function(result) {
@@ -101,14 +101,14 @@ module.exports = vows.describe('Subscribe').addBatch(resetBatch).addBatch({
     }
 
 
-  , '> Ensure that matching record exists in MySQL after 100ms': {
+  , '> Ensure that matching record exists in MySQL after 1s': {
       topic: function() {
         var callback = this.callback;
         setTimeout(function() {
           common.knex('devices')
             .where({user_id: 5, token: "sample", platform: 2})
             .exec(callback);
-        }, 500);
+        }, 1000);
       }
 
     , 'results should be an array': function(results) {
