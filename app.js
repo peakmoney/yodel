@@ -35,7 +35,7 @@ if (cluster.isMaster) {
     console.log('worker '+newPID+' born.');
   });
 
-  if (common.config('ping')) {
+  if (common.config('ping', true)) {
     ping();
     setInterval(ping, common.config('ping').frequency || 60000);
   }
@@ -57,7 +57,7 @@ if (cluster.isMaster) {
 // this will fail if there is nothing in the devices table
 // that may not be what everyone wants
 function ping() {
-  var cfg = common.config('ping');
+  var cfg = common.config('ping', true);
   https.get(cfg.run_url, function() {
     return Promise.props({
       sql: common.knex('devices').max('id as max_id')
