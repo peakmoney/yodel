@@ -1,5 +1,6 @@
 var common      = module.exports = {}
   , configCache = {}
+  , Promise     = require('bluebird')
   , env         = process.env.NODE_ENV || 'development';
 
 var config = common.config = function config(name, allowBlank) {
@@ -64,6 +65,7 @@ common.newRedisClient = function(configName) {
 }
 
 common.redis = common.newRedisClient('redis');
+Promise.promisifyAll(common.redis);
 
 if (config('redis_events', true)) {
   var redis = common.newRedisClient('redis_events');

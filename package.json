@@ -1,6 +1,6 @@
 {
   "name": "yodel",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "A lightweight server to simplify Android and iOS push notifications",
   "contributors": [
     "Rob Scott",
@@ -18,7 +18,8 @@
     "randomstring": "^1.0.3",
     "raven": "0.7.x",
     "redis": "0.12.x",
-    "yodel-gcm": "^0.9.21"
+    "yodel-gcm": "^0.9.21",
+    "bluebird": "~3.0.5"
   },
   "devDependencies": {
     "node-inspector": "^0.9.1",

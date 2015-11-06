@@ -2,7 +2,7 @@
 
 ![Yodel Logo](http://i.imgur.com/iUCHOMU.png)
 
-A lightweight Android and iOS push notification server that reads from a simple 
+A lightweight Android and iOS push notification server that reads from a simple
 Redis API and delivers notifications via GCM and APN.
 
 ## Sample Redis API Requests
@@ -23,13 +23,13 @@ rpush yodel:notify '{"user_id":5, "message":"This is a test", "payload": {"sampl
 ```
 
 ## Getting Started
-Yodel is meant to run as an independent Node service on Node 0.10.x and above. It 
+Yodel is meant to run as an independent Node service on Node 0.10.x and above. It
 requires connections to Redis and MySQL servers.
 
 
 
 ### Adding Config Files
-Of the 5 supported config files, only 1 is required. All have corresponding sample 
+Of the 7 supported config files, only 1 is required. All have corresponding sample
 files in the config directory.
 
 * knexfile.js (required)
@@ -38,12 +38,13 @@ files in the config directory.
 * apn.json (optional)
 * gcm.json (optional)
 * sentry.json (optional)
+* ping.json (optional)
 
 When writing apn.json, keep in mind that all of the options in that file are passed directly
 to the [node-apn](https://github.com/argon/node-apn) package. You can see a [list of supported options](https://github.com/argon/node-apn/blob/master/doc/connection.markdown) in their documentation.
 
 ### DB and Package Setup
-Ensure that you have MySQL and Redis running, and that you're MySQL server has a database 
+Ensure that you have MySQL and Redis running, and that you're MySQL server has a database
 matching you're knexfile. At that point, install npm packages and run the DB migration:
 
 ```
@@ -74,9 +75,9 @@ Yodel maintains an updated notification key for each user's Android devices. Onc
 Add option `"push_notification_key":true` to have Yodel send a key-bearing push notification to the subscribed device. This notification will provide the `notification_key` as a data element for use on the client.
 ```
 rpush yodel:subscribe '{
-  "user_id":5, 
-  "token":"sample", 
-  "platform":"android", 
+  "user_id":5,
+  "token":"sample",
+  "platform":"android",
   "push_notification_key":true
 }'
 ```
@@ -85,25 +86,30 @@ rpush yodel:subscribe '{
 Add option `"include_notification_key":true` to include the `notification_key` data element in the resulting push notification. This is particularly useful when implementing cross-device notification dismissal.
 ```
 rpush yodel:notify '{
-  "user_id":5, 
-  "message":"This is a test", 
-  "payload": {"sample": "payload"}, 
+  "user_id":5,
+  "message":"This is a test",
+  "payload": {"sample": "payload"},
   "include_notification_key":true
 }'
 ```
 
 ## Importing Devices from Urban Airship
 
-Yodel includes a basic import script for Urban Airship. It relies on your aliases being 
+Yodel includes a basic import script for Urban Airship. It relies on your aliases being
 integers. If you need to parse a different alias format, it should be relatively easy
 to modify.
 ```
 tasks/import_from_urban_airship -k ua_app_key -m ua_master_secret -e development
 ```
 
+## Ping
+
+If a valid `ping` config is present for the current environment, Yodel will ping the run and complete URLs at the specified frequency. This can be helpful to ensure that Yodel is running and connected to the necessary databases.
+
+
 ## Events
 
-If a `redis_events` config is present for the current environment, Yodel will publish 
+If a `redis_events` config is present for the current environment, Yodel will publish
 events to the `yodel:events` key. Those will be JSON strings in the following format:
 
 ```

@@ -1,5 +1,7 @@
 var cluster = require('cluster')
-  , program = require('commander');
+  , program = require('commander')
+  , https   = require('https')
+  , Promise = require('bluebird');
 
 
 program
@@ -7,12 +9,12 @@ program
   .option('-w, --workers <n>', 'Number of workers (defaults to number of CPUs)', parseInt)
   .parse(process.argv);
 
-
 if (program.environment) {
   process.env.NODE_ENV = program.environment;
 }
 
-var numWorkers = program.workers || require('os').cpus().length;
+var common     = require('./common')
+  , numWorkers = program.workers || require('os').cpus().length;
 
 if (cluster.isMaster) {
   // Fork workers. One per CPU for maximum effectiveness
@@ -33,6 +35,11 @@ if (cluster.isMaster) {
     console.log('worker '+newPID+' born.');
   });
 
+  if (common.config('ping')) {
+    ping();
+    setInterval(ping, common.config('ping').frequency || 60000);
+  }
+
 } else {
   var DeviceModel   = require('./lib/models/device')
     , RedisListener = require('./lib/listeners/redis');
@@ -44,4 +51,29 @@ if (cluster.isMaster) {
   });
 
   console.log('Listening to yodel:subscribe, yodel:unsubscribe, and yodel:notify');
+}
+
+
+// this will fail if there is nothing in the devices table
+// that may not be what everyone wants
+function ping() {
+  var cfg = common.config('ping');
+  https.get(cfg.run_url, function() {
+    return Promise.props({
+      sql: common.knex('devices').max('id as max_id')
+    , rds: common.redis.incrAsync('yodel:ping')
+    }).then(function(testResults) {
+      testResults.sql = testResults.sql[0].max_id;
+
+      for (var k in testResults) {
+        if (isNaN(testResults[k])) {
+          return console.error('Value not a number: '+k);
+        // } else if (testResults[k] < 1) {
+        //   return console.error('Value less than 1: '+k);
+        }
+      }
+
+      https.get(cfg.complete_url);
+    }).catch(common.notifyError);
+  });
 }
