@@ -19,14 +19,14 @@ module.exports = vows.describe('Subscribe').addBatch(resetBatch).addBatch({
     }
 
 
-  , '> Ensure that matching record exists in MySQL after 2s': {
+  , '> Ensure that matching record exists in MySQL after 3s': {
       topic: function() {
         var callback = this.callback;
         setTimeout(function() {
           common.knex('devices')
             .where({user_id: 5, token: "sample", platform: 2})
             .exec(callback);
-        }, 2000);
+        }, 3000);
       }
 
     , 'results should be an array': function(results) {
@@ -37,9 +37,9 @@ module.exports = vows.describe('Subscribe').addBatch(resetBatch).addBatch({
         results.should.have.lengthOf(1);
       }
 
-    , 'results.0.created_at should be within 2s': function(results) {
+    , 'results.0.created_at should be within 3s': function(results) {
         var createdAt = helpers.nestedProperty(results, '0.created_at').getTime();
-        createdAt.should.be.approximately(new Date().getTime(), 2000);
+        createdAt.should.be.approximately(new Date().getTime(), 3000);
       }
     }
   }
