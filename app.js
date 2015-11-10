@@ -68,8 +68,8 @@ function ping() {
       for (var k in testResults) {
         if (isNaN(testResults[k])) {
           return console.error('Value not a number: '+k);
-        // } else if (testResults[k] < 1) {
-        //   return console.error('Value less than 1: '+k);
+        } else if (testResults[k] < 1) {
+          return console.error('Value less than 1: '+k);
         }
       }
 
