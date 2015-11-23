@@ -24,7 +24,7 @@
     "yodel-gcm": "^0.9.21"
   },
   "devDependencies": {
-    "node-inspector": "^0.9.1",
+    "node-inspector": "^0.12.3",
     "should": "4.6.x",
     "vows": "0.8.x"
   },
