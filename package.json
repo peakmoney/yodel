@@ -16,7 +16,7 @@
     "bluebird": "~3.0.5",
     "commander": "^2.9.0",
     "knex": "0.9.x",
-    "mysql": "2.5.x",
+    "mysql": "2.9.x",
     "randomstring": "^1.0.3",
     "raven": "0.7.x",
     "redis": "0.12.x",
