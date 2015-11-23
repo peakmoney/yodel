@@ -33,3 +33,6 @@ config/*
 
 # Stupid Macs
 .DS_store
+
+# dump.rdb
+dump.rdb

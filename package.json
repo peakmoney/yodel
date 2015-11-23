@@ -1,30 +1,32 @@
 {
   "name": "yodel",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A lightweight server to simplify Android and iOS push notifications",
   "contributors": [
     "Rob Scott",
-    "Brian Bowden"
+    "Brian Bowden",
+    "David Hunt"
   ],
   "scripts": {
     "test": "test/run",
     "start": "node app.js"
   },
   "dependencies": {
-    "apn": "1.6.x",
-    "commander": "2.6.0",
-    "knex": "0.7.x",
+    "apn": "1.7.x",
+    "bluebird": "~3.0.5",
+    "commander": "^2.9.0",
+    "knex": "0.9.x",
     "mysql": "2.5.x",
     "randomstring": "^1.0.3",
     "raven": "0.7.x",
     "redis": "0.12.x",
-    "yodel-gcm": "^0.9.21",
-    "bluebird": "~3.0.5"
+    "vows": "^0.8.1",
+    "yodel-gcm": "^0.9.21"
   },
   "devDependencies": {
     "node-inspector": "^0.9.1",
     "should": "4.6.x",
-    "vows": "0.7.x"
+    "vows": "0.8.x"
   },
   "license": "Apache-2.0",
   "engine": "node >= 0.10.x"
