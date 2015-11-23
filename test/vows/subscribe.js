@@ -25,7 +25,7 @@ module.exports = vows.describe('Subscribe').addBatch(resetBatch).addBatch({
         setTimeout(function() {
           common.knex('devices')
             .where({user_id: 5, token: "sample", platform: 2})
-            .exec(callback);
+            .nodeify(callback);
         }, 3000);
       }
 
@@ -107,7 +107,7 @@ module.exports = vows.describe('Subscribe').addBatch(resetBatch).addBatch({
         setTimeout(function() {
           common.knex('devices')
             .where({user_id: 5, token: "sample", platform: 2})
-            .exec(callback);
+            .nodeify(callback);
         }, 2000);
       }
 
