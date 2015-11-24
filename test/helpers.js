@@ -80,6 +80,7 @@ ActionWatcher.prototype.waitForEvent = function(event, listener, delay) {
 
   var timeout = setTimeout(function() {
     self.removeListener(event, handler);
+    clearInterval(interval);
     return listener(new Error('Event ' + event + ' Never Completed'));
   }, 3500);
 
