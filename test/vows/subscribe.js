@@ -18,29 +18,37 @@ module.exports = vows.describe('Subscribe').addBatch(resetBatch).addBatch({
       should.equal(result, 1);
     }
 
-
-  , '> Ensure that matching record exists in MySQL after 3s': {
+  , '> Wait for event': {
       topic: function() {
-        var callback = this.callback;
-        setTimeout(function() {
-          common.knex('devices')
-            .where({user_id: 5, token: "sample", platform: 2})
-            .nodeify(callback);
-        }, 3000);
+        helpers.actionWatcher.waitForEvent('create_device:5', this.callback);
       }
 
-    , 'results should be an array': function(results) {
-        results.should.be.instanceof(Array);
+    , 'no errors': function(errs, results) {
+        should.not.exist(errs);
       }
+    }
+  }
 
-    , 'results should have length of 1': function(results) {
-        results.should.have.lengthOf(1);
-      }
+}).addBatch({
 
-    , 'results.0.created_at should be within 3s': function(results) {
-        var createdAt = helpers.nestedProperty(results, '0.created_at').getTime();
-        createdAt.should.be.approximately(new Date().getTime(), 3000);
-      }
+  'Ensure that matching record exists in MySQL after 3s': {
+    topic: function() {
+      common.knex('devices')
+        .where({user_id: 5, token: "sample", platform: 2})
+        .nodeify(this.callback);
+    }
+
+  , 'results should be an array': function(results) {
+      results.should.be.instanceof(Array);
+    }
+
+  , 'results should have length of 1': function(results) {
+      results.should.have.lengthOf(1);
+    }
+
+  , 'results.0.created_at should be within 5s': function(results) {
+      var createdAt = helpers.nestedProperty(results, '0.created_at').getTime();
+      createdAt.should.be.approximately(new Date().getTime(), 3000);
     }
   }
 
@@ -59,16 +67,9 @@ module.exports = vows.describe('Subscribe').addBatch(resetBatch).addBatch({
       should.equal(result, 1);
     }
 
-
-  , '> Redis lpop yodel:push after 2s': {
+  , '> Wait for push': {
       topic: function() {
-        var cb = this.callback;
-        setTimeout(function() {
-          common.redis.lpop("yodel:push", function(err, result) {
-            if (err) { return cb(err); }
-            cb(null, JSON.parse(result));
-          });
-        }, 2000);
+        helpers.actionWatcher.waitForPush(5, this.callback, 2000);
       }
 
     , 'aps.alert should be "Sample message"': function(result) {
@@ -100,26 +101,33 @@ module.exports = vows.describe('Subscribe').addBatch(resetBatch).addBatch({
       should.equal(result, 1);
     }
 
-
-  , '> Ensure that matching record exists in MySQL after 2s': {
+  , '> Wait for event': {
       topic: function() {
-        var callback = this.callback;
-        setTimeout(function() {
-          common.knex('devices')
-            .where({user_id: 5, token: "sample", platform: 2})
-            .nodeify(callback);
-        }, 2000);
+        helpers.actionWatcher.waitForEvent('delete_device:5', this.callback);
       }
 
-    , 'results should be an array': function(results) {
-        results.should.be.instanceof(Array);
-      }
-
-    , 'results should have length of 0': function(results) {
-        results.should.have.lengthOf(0);
+    , 'no errors': function(errs, results) {
+        should.not.exist(errs);
       }
     }
   }
 
+}).addBatch({
+
+  'Ensure that matching record does not exist in MySQL after 3s': {
+    topic: function() {
+      common.knex('devices')
+        .where({user_id: 5, token: "sample", platform: 2})
+        .nodeify(this.callback);
+    }
+
+  , 'results should be an array': function(results) {
+      results.should.be.instanceof(Array);
+    }
+
+  , 'results should have length of 0': function(results) {
+      results.should.have.lengthOf(0);
+    }
+  }
 
 }).export(module);
