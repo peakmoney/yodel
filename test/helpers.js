@@ -76,6 +76,9 @@ ActionWatcher.prototype.waitForEvent = function(event, listener, delay) {
     clearTimeout(timeout);
     clearInterval(interval);
     self.removeListener(event, handler);
+    setTimeout(function () {
+      listener.apply(self, arguments);
+    }, delay);
   }
 
   var timeout = setTimeout(function() {
