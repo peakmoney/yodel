@@ -67,7 +67,7 @@ common.newRedisClient = function(configName) {
 common.redis = common.newRedisClient('redis');
 Promise.promisifyAll(common.redis);
 
-if (config('redis_events', true)) {
+if (config('redis_events', true) || env == 'test') {
   var redis = common.newRedisClient('redis_events');
   common.publishEvent = function(event, callback) {
     redis.publish("yodel:events", JSON.stringify(event), callback);
