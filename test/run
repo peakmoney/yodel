@@ -4,7 +4,7 @@ var fs           = require('fs')
 
 process.env.NODE_ENV = 'test';
 
-var app = spawn('node', ['app', '-e', 'test'])
+var app = spawn('node', ['app', '-e', 'test', '-w', '2']);
 
 process.on('SIGINT', exit);
 process.on('SIGTERM', exit);

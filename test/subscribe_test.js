@@ -58,7 +58,7 @@ describe('Subscribe', function() {
         .nodeify(function(err, result) {
           if (err) { return done(err); }
           var createdAt = helpers.nestedProperty(result, '0.created_at').getTime();
-          createdAt.should.be.approximately(new Date().getTime(), 3000);
+          createdAt.should.be.approximately(new Date().getTime(), 5000);
           done();
         });
     });
