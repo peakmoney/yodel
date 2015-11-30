@@ -18,13 +18,13 @@
     "knex": "0.9.x",
     "mysql": "2.9.x",
     "randomstring": "^1.0.3",
-    "raven": "0.7.x",
-    "redis": "0.12.x",
+    "raven": "0.9.x",
+    "redis": "2.4.x",
     "yodel-gcm": "^0.9.21"
   },
   "devDependencies": {
     "node-inspector": "^0.12.3",
-    "should": "4.6.x",
+    "should": "7.1.x",
     "mocha": "2.3.x"
   },
   "license": "Apache-2.0",
