@@ -62,7 +62,6 @@ ActionWatcher.prototype.waitForEvent = function(event, listener) {
 
   var interval = setInterval(function() {
     if (key in self.buffer) {
-      self.removeListener(event, listener);
       var result = self.buffer[key];
       delete self.buffer[key];
       return handler(null, result);
@@ -74,8 +73,11 @@ ActionWatcher.prototype.waitForEvent = function(event, listener) {
   }, 3100);
 
   var handler = function(err, result) {
+    err = err || null;
+    
     clearTimeout(timeout);
     clearInterval(interval);
+    self.removeListener(event, listener);
     return listener(err, result);
   }
 
@@ -94,6 +96,7 @@ ActionWatcher.prototype.waitForPush = function(userId, listener) {
   }, 2000);
 
   var handler = function(err, result) {
+    err = err || null;
     clearTimeout(timeout);
     clearInterval(interval);
     return listener(err, result);
