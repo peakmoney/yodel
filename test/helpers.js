@@ -62,7 +62,7 @@ ActionWatcher.prototype.waitForEvent = function(event, listener) {
 
   var interval = setInterval(function() {
     if (key in self.buffer) {
-      console.log('Found key '+key+' in buffer');
+      console.log('Found key '+key+' in buffer')
       var result = self.buffer[key];
       delete self.buffer[key];
       return handler(null, result);
@@ -71,7 +71,7 @@ ActionWatcher.prototype.waitForEvent = function(event, listener) {
 
   var timeout = setTimeout(function () {
     return handler(new Error('Event '+event+' never happened'));
-  }, 4000);
+  }, 3000);
 
   var handler = function(err, result) {
     err = err || null;
@@ -82,7 +82,7 @@ ActionWatcher.prototype.waitForEvent = function(event, listener) {
     return listener(err, result);
   }
 
-  this.once(event, listener);
+  this.once(event, handler);
 }
 
 ActionWatcher.prototype.waitForPush = function(userId, listener) {
