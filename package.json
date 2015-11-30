@@ -20,13 +20,12 @@
     "randomstring": "^1.0.3",
     "raven": "0.7.x",
     "redis": "0.12.x",
-    "vows": "^0.8.1",
     "yodel-gcm": "^0.9.21"
   },
   "devDependencies": {
     "node-inspector": "^0.12.3",
     "should": "4.6.x",
-    "vows": "0.8.x"
+    "mocha": "2.3.x"
   },
   "license": "Apache-2.0",
   "engine": "node >= 0.10.x"

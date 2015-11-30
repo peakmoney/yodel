@@ -56,60 +56,48 @@ ActionWatcher.prototype.clearBuffer = function() {
   return this.buffer = {};
 }
 
-ActionWatcher.prototype.waitForEvent = function(event, listener, delay) {
-  var self = this
-    , key  = 'yodel:events';
-
-  delay = delay || 500;
+ActionWatcher.prototype.waitForEvent = function(event, listener) {
+  var self = this;
+  var key = 'yodel:events';
 
   var interval = setInterval(function() {
     if (key in self.buffer) {
+      self.removeListener(event, listener);
       var result = self.buffer[key];
-      listener(null, result);
       delete self.buffer[key];
-      handler();
-      return;
+      return handler(null, result);
     }
   }, 1000);
 
-  var handler = function() {
+  var timeout = setTimeout(function () {
+    return handler(new Error('Event '+event+' never happened'));
+  }, 3100);
+
+  var handler = function(err, result) {
     clearTimeout(timeout);
     clearInterval(interval);
-    self.removeListener(event, handler);
-    setTimeout(function () {
-      listener.apply(self, arguments);
-    }, delay);
+    return listener(err, result);
   }
 
-  var timeout = setTimeout(function() {
-    self.removeListener(event, handler);
-    clearInterval(interval);
-    return listener(new Error('Event ' + event + ' Never Completed'));
-  }, 3500);
-
-  this.once(event, handler);
+  this.once(event, listener);
 }
 
-ActionWatcher.prototype.waitForPush = function(userId, listener, delay) {
-  delay = delay || 500;
-
+ActionWatcher.prototype.waitForPush = function(userId, listener) {
   var interval = setInterval(function() {
-    common.redis.lpop("yodel:push", function(err, result) {
-      if (result) {
-        handler();
-        return listener(null, JSON.parse(result));
-      }
+    common.redis.lpop('yodel:push', function(err, result) {
+      return handler(null, JSON.parse(result));
     });
   }, 500);
 
-  var handler = function() {
+  var timeout = setTimeout(function() {
+    return handler(new Error('Push for User '+userId+' never happened'));
+  }, 2000);
+
+  var handler = function(err, result) {
     clearTimeout(timeout);
     clearInterval(interval);
+    return listener(err, result);
   }
-
-  var timeout = setTimeout(function () {
-    return listener(new Error('Push for '+userId+' never happened'));
-  }, delay);
 }
 
 helpers.actionWatcher = new ActionWatcher();
