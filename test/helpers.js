@@ -62,6 +62,7 @@ ActionWatcher.prototype.waitForEvent = function(event, listener) {
 
   var interval = setInterval(function() {
     if (key in self.buffer) {
+      console.log('Found key '+key+' in buffer');
       var result = self.buffer[key];
       delete self.buffer[key];
       return handler(null, result);
