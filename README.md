@@ -23,7 +23,7 @@ rpush yodel:notify '{"user_id":5, "message":"This is a test", "payload": {"sampl
 ```
 
 ## Getting Started
-Yodel is meant to run as an independent Node service on Node 0.10.x and above. It
+Yodel is meant to run as an independent Node service on Node 0.10.x and up to Node 4.x. It
 requires connections to Redis and MySQL servers.
 
 
