@@ -70,11 +70,11 @@ ActionWatcher.prototype.waitForEvent = function(event, listener) {
 
   var timeout = setTimeout(function () {
     return handler(new Error('Event '+event+' never happened'));
-  }, 3100);
+  }, 4000);
 
   var handler = function(err, result) {
     err = err || null;
-    
+
     clearTimeout(timeout);
     clearInterval(interval);
     self.removeListener(event, listener);
@@ -93,7 +93,7 @@ ActionWatcher.prototype.waitForPush = function(userId, listener) {
 
   var timeout = setTimeout(function() {
     return handler(new Error('Push for User '+userId+' never happened'));
-  }, 2000);
+  }, 3000);
 
   var handler = function(err, result) {
     err = err || null;
