@@ -7,21 +7,21 @@ var apnFeedback = require('apn').Feedback;
 var FeedbackService = require('../lib/listeners/feedback');
 
 describe('Feedback', function() {
+  var feedback;
+
+  before(function(done) {
+    feedback = FeedbackService();
+
+    knex('devices').insert({
+      user_id: 40,
+      token:  'abc123',
+      platform: 2,
+      created_at: new Date(2015, 10, 1),
+      updated_at: new Date(2015, 10, 15)
+    }).nodeify(done);
+  });
+
   describe('processApnFeedback', function() {
-    var feedback;
-
-    before(function(done) {
-      feedback = FeedbackService();
-
-      knex('devices').insert({
-        user_id: 40,
-        token:  'abc123',
-        platform: 2,
-        created_at: new Date(2015, 10, 1),
-        updated_at: new Date(2015, 10, 15)
-      }).nodeify(done);
-    });
-
     it('user 40 should exist', function(done) {
       knex('devices').where({user_id: 40, token: 'abc123'}).nodeify(function(err, results) {
         if (err) { return done(err); }
