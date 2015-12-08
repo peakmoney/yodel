@@ -1,10 +1,19 @@
+**Yodel follows [Semantic Versioning](http://semver.org/)**
 ## Change Log
 
-**0.2.0** - <small>_November 23, 2015_</small> -
+**0.2.0** - <small>_2015-12-08_</small> -
 
-* Tested support for Node 0.10.x and up to Node 4.x.
-* Upgraded node-apn, knex, commander, and mysql packages.
-* Replaced vows with mocha; removed `test/vows` in favor of `test/*.js`.
-* Refactored `test/run` to spawn mocha as a child process.
-* `notifyIos()` and `notifyAndroid()` now run concurrently as promises.
-* Devices returned via batched APN feedback will be automatically unsubscribed.
+##### Added
+* Mocha.js
+* Support for APN Feedback Service
+* Testing for greater than Node 0.10.x
+* Various test helpers
+
+##### Changed
+* iOS and Android notifications are now run asynchronously
+* Pushed batch iOS notifications off to node-apn
+* Styling changes here and there
+* Tests for subscribe
+
+##### Removed
+* Vows.js
