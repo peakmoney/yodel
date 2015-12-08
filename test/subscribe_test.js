@@ -94,7 +94,7 @@ describe('Subscribe', function() {
       });
     });
 
-    it('should wait for Event create_device:5', function(done) {
+    it('should wait for Event delete_device:5', function(done) {
       this.timeout(3500);
       helpers.actionWatcher.waitForEvent('delete_device:5', function(err) {
         if (err) return done(err);

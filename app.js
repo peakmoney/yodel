@@ -43,7 +43,7 @@ if (cluster.isMaster) {
 } else {
   var DeviceModel   = require('./lib/models/device');
   var RedisListener = require('./lib/listeners/redis');
-  var FeedbackService = require('./lib/models/feedback');
+  var FeedbackService = require('./lib/listeners/feedback');
 
   RedisListener.listen({
     'yodel:subscribe':   DeviceModel.subscribe,
@@ -52,7 +52,7 @@ if (cluster.isMaster) {
   });
 
   // call our feedback service once our redis listener is listening
-  FeedbackService();
+  var feedback = FeedbackService();
 
   console.log('Listening to yodel:subscribe, yodel:unsubscribe, and yodel:notify');
 }
