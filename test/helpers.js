@@ -1,7 +1,9 @@
-var should        = require('should')
-  , util          = require('util')
-  , EventEmitter  = require('events').EventEmitter
-  , common        = require('../common');
+var should        = require('should');
+var util          = require('util');
+var EventEmitter  = require('events').EventEmitter;
+var common        = require('../common');
+var Promise = require('bluebird');
+var jdg = require('jdg');
 
 var helpers = module.exports = {};
 
@@ -26,25 +28,25 @@ helpers.nestedProperty = function(obj, keys, val) {
   return obj;
 }
 
-var ActionWatcher = function() {
-  this.actionPrefix = 'yodel:events';
-  this.redis = common.newRedisClient('redis');
-  this.buffer = {};
+var ActionWatcher = function ActionWatcher() {
+  var _this = this;
+  _this.buffer = {};
 
-  var self = this;
-  self.redis.on('ready', function() {
-    self.redis.subscribe('yodel:events');
+  _this.redis = common.newRedisClient('redis');
+  _this.redis.on('ready', function() {
+    return _this.redis.subscribeAsync('yodel:events');
   });
 
-  self.redis.on('message', function(channel, message) {
+  _this.redis.on('message', function(channel, message) {
     var result = JSON.parse(message);
     var event = message.action + ':' + message.user_id;
-    var listeners = self.listeners(event);
+    var listeners = _this.listeners(event);
 
     if (listeners.length > 0) {
-      self.emit(event, result);
+      return _this.emit(event, result);
     } else {
-      self.buffer[channel] = result;
+      _this.buffer[channel] = result;
+      return;
     }
   });
 
@@ -53,55 +55,51 @@ var ActionWatcher = function() {
 util.inherits(ActionWatcher, EventEmitter);
 
 ActionWatcher.prototype.clearBuffer = function() {
-  return this.buffer = {};
+  this.buffer = {};
 }
 
-ActionWatcher.prototype.waitForEvent = function(event, listener) {
-  var self = this;
+ActionWatcher.prototype.waitForEvent = function waitForEvent(event) {
+  var _this = this;
   var key = 'yodel:events';
+  var polls = 6;
 
-  var interval = setInterval(function() {
-    if (key in self.buffer) {
-      console.log('Found key '+key+' in buffer')
-      var result = self.buffer[key];
-      delete self.buffer[key];
-      return handler(null, result);
-    }
-  }, 1000);
-
-  var timeout = setTimeout(function () {
-    return handler(new Error('Event '+event+' never happened'));
-  }, 3000);
-
-  var handler = function(err, result) {
-    err = err || null;
-
-    clearTimeout(timeout);
-    clearInterval(interval);
-    self.removeListener(event, listener);
-    return listener(err, result);
+  function poll() {
+    return Promise.delay(500).then(function() {
+      if (jdg.is.present(_this.buffer[key])) {
+        var result = _this.buffer[key];
+        delete _this.buffer[key];
+        return result;
+      } else if (polls.length < 1) {
+        throw new Error('Event '+event+' never happened');
+      } else {
+        polls--;
+        return poll();
+      }
+    });
   }
 
-  this.once(event, handler);
+  return poll();
 }
 
-ActionWatcher.prototype.waitForPush = function(userId, listener) {
-  var interval = setInterval(function() {
-    common.redis.lpop('yodel:push', function(err, result) {
-      return handler(null, JSON.parse(result));
+ActionWatcher.prototype.waitForPush = function(userId) {
+  var polls = 6;
+
+  function poll() {
+    return Promise.delay(500).then(function() {
+      return common.redis.lpopAsync('yodel:push').then(function(result) {
+        if (jdg.is.present(result)) {
+          return JSON.parse(result);
+        } else if (polls.length < 1) {
+          throw new Error('Push for User '+userId+' never happened');
+        } else {
+          polls--;
+          return poll();
+        }
+      });
     });
-  }, 500);
-
-  var timeout = setTimeout(function() {
-    return handler(new Error('Push for User '+userId+' never happened'));
-  }, 3000);
-
-  var handler = function(err, result) {
-    err = err || null;
-    clearTimeout(timeout);
-    clearInterval(interval);
-    return listener(err, result);
   }
+
+  return poll();
 }
 
 helpers.actionWatcher = new ActionWatcher();

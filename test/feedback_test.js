@@ -1,60 +1,50 @@
 var helpers = require('./helpers');
 var common = require('../common');
-var redis = common.redis;
-var knex = common.knex;
-
+var resetBatch = require('./reset_batch');
 var apnFeedback = require('apn').Feedback;
-var FeedbackService = require('../lib/listeners/feedback');
+var feedback = require('../lib/feedback');
 
 describe('Feedback', function() {
-  var feedback;
 
-  before(function(done) {
-    feedback = FeedbackService();
-
-    knex('devices').insert({
-      user_id: 40,
-      token:  'abc123',
-      platform: 2,
-      created_at: new Date(2015, 10, 1),
-      updated_at: new Date(2015, 10, 15)
-    }).nodeify(done);
+  before(function() {
+    return resetBatch().then(function() {
+      return common.knex('devices').insert({
+        user_id: 40,
+        token:  'abc123',
+        platform: 2,
+        created_at: new Date(2015, 10, 1),
+        updated_at: new Date(2015, 10, 15)
+      });
+    });
   });
 
   describe('processApnFeedback', function() {
-    it('user 40 should exist', function(done) {
-      knex('devices').where({user_id: 40, token: 'abc123'}).nodeify(function(err, results) {
-        if (err) { return done(err); }
+    it('user 40 should exist', function() {
+      return common.knex('devices').where({user_id: 40, token: 'abc123'}).then(function(results) {
         results.should.be.instanceof(Array);
         results.should.have.lengthOf(1);
-        done();
       });
     });
 
-    it('feedback.apnService should be an apn.Feedback object', function(done) {
-      feedback.apnService.should.be.instanceof(apnFeedback);
+    it('feedback.service should be an apn.Feedback object', function(done) {
+      feedback.service.should.be.instanceof(apnFeedback);
       done();
     });
 
     it('emit "feedback"', function(done) {
-      feedback.apnService.emit('feedback', [{device: 'abc123', time: new Date().getTime() }]);
+      feedback.service.emit('feedback', [{device: 'abc123', time: new Date().getTime() }]);
       done();
     });
 
-    it('should wait for Event delete_device:40', function(done) {
+    it('should wait for Event delete_device:40', function() {
       this.timeout(3500);
-      helpers.actionWatcher.waitForEvent('delete_device:40', function(err) {
-        if (err) return done(err);
-        done();
-      });
+      return (helpers.actionWatcher.waitForEvent('delete_device:40')).should.be.fulfilled();
     });
 
-    it('should have unsubscribed user 40', function(done) {
-      knex('devices').where({user_id: 40, token: 'abc123'}).nodeify(function(err, results) {
-        if (err) { return done(err); }
+    it('should have unsubscribed user 40', function() {
+      return common.knex('devices').where({user_id: 40, token: 'abc123'}).then(function(results) {
         results.should.be.instanceof(Array);
         results.should.have.lengthOf(0);
-        done();
       });
     });
   });

@@ -41,20 +41,21 @@ if (cluster.isMaster) {
   }
 
 } else {
-  var DeviceModel   = require('./lib/models/device');
-  var RedisListener = require('./lib/listeners/redis');
-  var FeedbackService = require('./lib/listeners/feedback');
+  var Device = require('./lib/device');
+  var RedisListener = require('./lib/redis');
 
   RedisListener.listen({
-    'yodel:subscribe':   DeviceModel.subscribe,
-    'yodel:unsubscribe': DeviceModel.unsubscribe,
-    'yodel:notify':      DeviceModel.notify
+    'yodel:subscribe':    Device.subscribe,
+    'yodel:unsubscribe':  Device.unsubscribe,
+    'yodel:notify':       Device.notify
   });
 
-  // call our feedback service once our redis listener is listening
-  var feedback = FeedbackService();
-
   console.log('Listening to yodel:subscribe, yodel:unsubscribe, and yodel:notify');
+
+  if (common.config('apn_feedback', true)) {
+    require('./lib/feedback');
+    console.log('APN Feedback Service monitoring is active');
+  }
 }
 
 

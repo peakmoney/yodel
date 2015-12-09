@@ -1,0 +1,9 @@
+{
+  "development": {
+    "cert": "sample cert or path to cert.pem",
+    "key": "sample key or path to key.pem",
+    "batchFeedback": false,
+    "interval": 43200,
+    "production": false,
+  }
+}

@@ -15,6 +15,7 @@
     "apn": "1.7.x",
     "bluebird": "~3.0.5",
     "commander": "^2.9.0",
+    "jdg": "^1.0.1",
     "knex": "0.9.x",
     "mysql": "2.9.x",
     "randomstring": "^1.0.3",
@@ -24,7 +25,7 @@
   },
   "devDependencies": {
     "node-inspector": "^0.12.3",
-    "should": "7.1.x",
+    "should": "^8.0.0",
     "mocha": "2.3.x"
   },
   "license": "Apache-2.0",

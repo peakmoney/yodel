@@ -1,7 +1,7 @@
-var common      = module.exports = {}
-  , configCache = {}
-  , Promise     = require('bluebird')
-  , env         = process.env.NODE_ENV || 'development';
+var common      = module.exports = {};
+var configCache = {};
+var Promise     = require('bluebird');
+var env         = process.env.NODE_ENV || 'development';
 
 var config = common.config = function config(name, allowBlank) {
   if (typeof configCache[name] !== 'undefined') { return configCache[name]; }
@@ -31,6 +31,11 @@ common.notifyError = function(err) {
   console.error(err);
 };
 
+common.logAndThrow = function logAndThrow(err) {
+  console.log(err);
+  throw new Error(err);
+}
+
 if (config('sentry', true)) {
   var raven = require('raven');
   var ravenClient = new raven.Client(config('sentry').dsn);
@@ -56,7 +61,10 @@ common.newRedisClient = function(configName) {
     rConfig.database = 5;
   }
 
-  var client = require("redis").createClient(
+  var redis = require('redis');
+  Promise.promisifyAll(redis.RedisClient.prototype);
+
+  var client = redis.createClient(
     rConfig.port, rConfig.host, rConfig.options);
 
   if (!isNaN(rConfig.database)) { client.select(rConfig.database); }
@@ -65,11 +73,10 @@ common.newRedisClient = function(configName) {
 }
 
 common.redis = common.newRedisClient('redis');
-Promise.promisifyAll(common.redis);
 
 if (config('redis_events', true) || env == 'test') {
   var redis = common.newRedisClient('redis_events');
   common.publishEvent = function(event, callback) {
-    redis.publish("yodel:events", JSON.stringify(event), callback);
+    return redis.publishAsync("yodel:events", JSON.stringify(event)).nodeify(callback);
   }
 }
