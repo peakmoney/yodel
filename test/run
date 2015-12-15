@@ -1,38 +1,53 @@
 #!/usr/bin/env node
-var fs           = require('fs')
-  , spawn        = require('child_process').spawn;
+var fs = require('fs');
+var spawn = require('child_process').spawn;
+var Promise = require('bluebird');
+var app;
 
 process.env.NODE_ENV = 'test';
 
-var app = spawn('node', ['app', '-e', 'test', '-w', '2']);
+Promise.map(['apn', 'apn_feedback'], function(name) {
+  return configCheck(name);
+})
+.then(function() {
+  app = spawn('node', ['app', '-e', 'test', '-w', '2']);
 
-process.on('SIGINT', exit);
-process.on('SIGTERM', exit);
-process.on('exit', exit);
-app.stdout.pipe(process.stdout);
-app.stderr.pipe(process.stderr);
+  process.on('SIGINT', exit);
+  process.on('SIGTERM', exit);
+  process.on('exit', exit);
+  app.stdout.pipe(process.stdout);
+  app.stderr.pipe(process.stderr);
 
-fs.access(process.cwd()+'/config/apn.json', function(err) {
-  if (!err) {
-    runTests();
-  } else {
-    fs.readFile(process.cwd()+'/config/apn.sample.json', 'utf8', function(err, data) {
-      if (err) {
-        process.stdout.write('Error copying apn.sample.json to apn.json');
-        exit(1);
+  return runTests();
+})
+.catch(function(err) {
+  console.log(err);
+  exit(1);
+});
+
+function configCheck(name) {
+  Promise.try(function() {
+    fs.access(process.cwd()+'/config/'+name+'.json', function(err) {
+      if (!err) {
+        return;
       } else {
-        fs.writeFile(process.cwd()+'/config/apn.json', data, function(err) {
+        fs.readFile(process.cwd()+'/config/'+name+'.sample.json', 'utf8', function(err, data) {
           if (err) {
-            process.stdout.write('Error writing apn.sample.json to apn.json');
-            exit(1);
+            throw new Error('Error copying '+name+'.sample.json');
           } else {
-            runTests();
+            fs.writeFile(process.cwd()+'/config/'+name+'.json', data, function(err) {
+              if (err) {
+                throw new Error('Error writing '+name+'.json');
+              } else {
+                return;
+              }
+            });
           }
         });
       }
     });
-  }
-});
+  });
+}
 
 function exit(code) {
   app.kill();
