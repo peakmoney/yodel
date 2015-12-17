@@ -311,9 +311,9 @@
           }
         },
         "v8flags": {
-          "version": "2.0.10",
+          "version": "2.0.2",
           "from": "v8flags@>=2.0.2 <3.0.0",
-          "resolved": "https://registry.npmjs.org/v8flags/-/v8flags-2.0.10.tgz",
+          "resolved": "https://registry.npmjs.org/v8flags/-/v8flags-2.0.2.tgz",
           "dependencies": {
             "user-home": {
               "version": "1.1.1",
