@@ -1,6 +1,6 @@
 var cluster = require('cluster');
 var program = require('commander');
-var https   = require('https');
+var https = require('https');
 var Promise = require('bluebird');
 
 
@@ -13,7 +13,7 @@ if (program.environment) {
   process.env.NODE_ENV = program.environment;
 }
 
-var common     = require('./common');
+var common = require('./common');
 var numWorkers = program.workers || require('os').cpus().length;
 
 if (cluster.isMaster) {
@@ -45,9 +45,9 @@ if (cluster.isMaster) {
   var RedisListener = require('./lib/redis');
 
   RedisListener.listen({
-    'yodel:subscribe':    Device.subscribe,
-    'yodel:unsubscribe':  Device.unsubscribe,
-    'yodel:notify':       Device.notify
+    'yodel:subscribe': Device.subscribe,
+    'yodel:unsubscribe': Device.unsubscribe,
+    'yodel:notify': Device.notify
   });
 
   console.log('Listening to yodel:subscribe, yodel:unsubscribe, and yodel:notify');
