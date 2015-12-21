@@ -23,7 +23,7 @@ rpush yodel:notify '{"user_id":5, "message":"This is a test", "payload": {"sampl
 ```
 
 ## Getting Started
-Yodel is meant to run as an independent Node service on Node 0.10.x and above. It
+Yodel is meant to run as an independent Node service on Node 0.10.x and up to Node 5.x. It
 requires connections to Redis and MySQL servers.
 
 
@@ -92,6 +92,11 @@ rpush yodel:notify '{
   "include_notification_key":true
 }'
 ```
+
+## iOS Feedback
+Yodel automatically takes advantage of APN's Feedback Service and unsubscribes devices who have not re-registered or updated since your last failed notification to the device. This is discussed in the APN documentation [here](https://developer.apple.com/library/ios/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/Chapters/CommunicatingWIthAPS.html#//apple_ref/doc/uid/TP40008194-CH101-SW3).
+
+By default, Yodel will query the service once every 12 hours. You can change this by setting a new `interval` in `config/apn.json` as seconds. For example, to query for feedback every hour -  `"interval": 3600`.
 
 ## Importing Devices from Urban Airship
 

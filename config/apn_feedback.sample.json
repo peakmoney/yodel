@@ -1,0 +1,17 @@
+{
+  "development": {
+    "cert": "config/cert.pem",
+    "key": "config/key.pem",
+    "batchFeedback": false,
+    "interval": 43200,
+    "production": false
+  },
+
+  "test": {
+    "cert": "node_modules/apn/test/credentials/support/cert.pem",
+    "key": "node_modules/apn/test/credentials/support/key.pem",
+    "batchFeedback": false,
+    "interval": 43200,
+    "production": false
+  }
+}

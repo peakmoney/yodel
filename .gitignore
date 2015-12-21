@@ -31,5 +31,11 @@ node_modules
 config/*
 !config/*.sample.*
 
+# Jsdoc directory
+out/*
+
 # Stupid Macs
 .DS_store
+
+# dump.rdb
+dump.rdb
