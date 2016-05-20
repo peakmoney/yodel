@@ -6,6 +6,7 @@ const https = require('https');
 const Promise = require('bluebird');
 const Device = require('./lib/device');
 const RedisListener = require('./lib/redis_listener');
+const APNFeedbackListener = require('./lib/apn_feedback_listener');
 
 
 program
@@ -69,7 +70,7 @@ if (cluster.isMaster) {
     setInterval(ping, common.config.ping.frequency || 60000);
   }
 } else {
-  RedisListener.listen({
+  new RedisListener().listen({
     'yodel:subscribe': Device.subscribe,
     'yodel:unsubscribe': Device.unsubscribe,
     'yodel:notify': Device.notify,
@@ -79,7 +80,8 @@ if (cluster.isMaster) {
     `Listening to yodel:subscribe, yodel:unsubscribe, and yodel:notify\n`);
 
   if (common.config.apnFeedback.cert) {
-    require('./lib/feedback');
+    const apnFeedbackListener = new APNFeedbackListener();
+    apnFeedbackListener.listen();
     console.log('APN Feedback Service monitoring is active');
   }
 }
