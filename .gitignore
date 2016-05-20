@@ -29,7 +29,10 @@ node_modules
 
 # Config directory
 config/*
-!config/*.sample.*
+
+# Dotenv
+.env.*
+!.env.sample
 
 # Jsdoc directory
 out/*

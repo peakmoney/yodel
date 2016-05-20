@@ -1,64 +1,20 @@
 #!/usr/bin/env node
-var fs = require('fs');
-var spawn = require('child_process').spawn;
-var Promise = require('bluebird');
-var app;
+
+'use strict';
+
+const spawn = require('child_process').spawn;
 
 process.env.NODE_ENV = 'test';
 
-Promise.map(['apn', 'apn_feedback'], function(name) {
-  return configCheck(name);
-})
-.then(function() {
-  app = spawn('node', ['app', '-e', 'test', '-w', '2']);
+const app = spawn('node', ['app', '-e', 'test', '-w', '2'], { stdio: 'inherit' });
 
-  process.on('SIGINT', exit);
-  process.on('SIGTERM', exit);
-  process.on('exit', exit);
-  app.stdout.pipe(process.stdout);
-  app.stderr.pipe(process.stderr);
+app.on('SIGINT', process.exit);
+app.on('SIGTERM', process.exit);
+app.on('exit', process.exit);
 
-  return runTests();
-})
-.catch(function(err) {
-  console.log(err);
-  exit(1);
-});
-
-function configCheck(name) {
-  Promise.try(function() {
-    fs.access(process.cwd()+'/config/'+name+'.json', function(err) {
-      if (!err) {
-        return;
-      } else {
-        fs.readFile(process.cwd()+'/config/'+name+'.sample.json', 'utf8', function(err, data) {
-          if (err) {
-            throw new Error('Error copying '+name+'.sample.json');
-          } else {
-            fs.writeFile(process.cwd()+'/config/'+name+'.json', data, function(err) {
-              if (err) {
-                throw new Error('Error writing '+name+'.json');
-              } else {
-                return;
-              }
-            });
-          }
-        });
-      }
-    });
-  });
-}
-
-function exit(code) {
-  app.kill();
-  process.exit(code);
-};
-
-function runTests() {
-  setTimeout(function() {
-    var mocha = spawn('mocha', ['-R', 'spec'], {stdio: 'inherit'});
-    mocha.on('SIGINT', exit);
-    mocha.on('SIGTERM', exit);
-    mocha.on('exit', exit);
-  }, 1000);
-};
+setTimeout(() => {
+  const mocha = spawn('mocha', ['-R', 'spec'], { stdio: 'inherit' });
+  mocha.on('SIGINT', process.exit);
+  mocha.on('SIGTERM', process.exit);
+  mocha.on('exit', process.exit);
+}, 1000);

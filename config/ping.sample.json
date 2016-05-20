@@ -1,7 +1,0 @@
-{
-  "development": {
-    "run_url": "https://cronitor.link/SAMPLE/run"
-  , "complete_url": "https://cronitor.link/SAMPLE/complete"
-  , "frequency": 60000
-  }
-}
