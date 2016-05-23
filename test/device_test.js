@@ -1,7 +1,10 @@
-var helpers = require('./helpers');
-var common = require('../common');
-var resetBatch = require('./reset_batch');
-var Device = require('../lib/device');
+'use strict';
+
+const helpers = require('./helpers');
+const common = require('../common');
+const resetBatch = require('./reset_batch');
+const Device = require('../lib/device');
+const should = require('should');
 
 describe('Device', function() {
 

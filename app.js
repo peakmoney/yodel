@@ -78,9 +78,9 @@ if (cluster.isMaster) {
 } else {
   const redisListener = new RedisListener();
   redisListener.listen({
-    'yodel:subscribe': Device.subscribe,
-    'yodel:unsubscribe': Device.unsubscribe,
-    'yodel:notify': Device.notify,
+    'yodel:subscribe': Device.subscribe.bind(Device),
+    'yodel:unsubscribe': Device.unsubscribe.bind(Device),
+    'yodel:notify': Device.notify.bind(Device),
   });
 
   process.stdout.write(
