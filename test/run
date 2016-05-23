@@ -6,15 +6,26 @@ const spawn = require('child_process').spawn;
 
 process.env.NODE_ENV = 'test';
 
+let mocha;
 const app = spawn('node', ['app', '-e', 'test', '-w', '2'], { stdio: 'inherit' });
 
-app.on('SIGINT', process.exit);
-app.on('SIGTERM', process.exit);
-app.on('exit', process.exit);
+function exit() {
+  app.kill();
+  if (mocha) { mocha.kill(); }
+  process.exit();
+}
+
+process.on('SIGINT', exit);
+process.on('SIGTERM', exit);
+process.on('exit', exit);
+
+app.on('SIGINT', exit);
+app.on('SIGTERM', exit);
+app.on('exit', exit);
 
 setTimeout(() => {
-  const mocha = spawn('mocha', ['-R', 'spec'], { stdio: 'inherit' });
-  mocha.on('SIGINT', process.exit);
-  mocha.on('SIGTERM', process.exit);
-  mocha.on('exit', process.exit);
+  mocha = spawn('mocha', ['-R', 'spec'], { stdio: 'inherit' });
+  mocha.on('SIGINT', exit);
+  mocha.on('SIGTERM', exit);
+  mocha.on('exit', exit);
 }, 1000);

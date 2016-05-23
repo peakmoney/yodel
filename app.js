@@ -76,7 +76,8 @@ if (cluster.isMaster) {
     setInterval(ping, common.config.ping.frequency || 60000);
   }
 } else {
-  new RedisListener().listen({
+  const redisListener = new RedisListener();
+  redisListener.listen({
     'yodel:subscribe': Device.subscribe,
     'yodel:unsubscribe': Device.unsubscribe,
     'yodel:notify': Device.notify,

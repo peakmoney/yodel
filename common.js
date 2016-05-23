@@ -20,19 +20,25 @@ if (dotenvPath) {
   dotenv.config({ path: dotenvPath });
 }
 
+function parseBoolean(val) {
+  return JSON.parse(val);
+}
+
 // Only APN, GCM, and Knex (MySQL) config are actually required here
 const config = common.config = {
   apn: {
     cert: process.env.APN_CERT,
     key: process.env.APN_KEY,
-    production: process.env.APN_PRODUCTION,
+    production: parseBoolean(process.env.APN_PRODUCTION),
+    sandbox: parseBoolean(process.env.APN_SANDBOX),
   },
   apnFeedback: {
     cert: process.env.APN_FEEDBACK_CERT,
     key: process.env.APN_FEEDBACK_KEY,
     batchFeedback: process.env.APN_FEEDBACK_BATCH_FEEDBACK,
     interval: process.env.APN_FEEDBACK_INTERVAL,
-    production: process.env.APN_FEEDBACK_PRODUCTION,
+    production: parseBoolean(process.env.APN_FEEDBACK_PRODUCTION),
+    sandbox: parseBoolean(process.env.APN_FEEDBACK_SANDBOX),
   },
   gcm: {
     server_api_key: process.env.GCM_SERVER_API_KEY,
@@ -66,7 +72,7 @@ const config = common.config = {
 
 // Sentry (error reporting)
 if (config.sentry.dsn) {
-  const ravenClient = new raven.Client(config('sentry').dsn);
+  const ravenClient = new raven.Client(config.sentry.dsn);
   ravenClient.patchGlobal();
   common.notifyError = function notifyError(err, callback) {
     let fullErr = err;
@@ -82,7 +88,7 @@ common.knex = require('knex')(config.knex);
 
 // Redis
 common.newRedisClient = function newRedisClient(configName) {
-  const rConfig = config[configName];
+  const rConfig = config[configName] || {};
   rConfig.port = rConfig.port || 6379;
   rConfig.host = rConfig.host || '127.0.0.1';
 

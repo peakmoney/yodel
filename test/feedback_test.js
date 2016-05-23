@@ -1,8 +1,12 @@
-var helpers = require('./helpers');
-var common = require('../common');
-var resetBatch = require('./reset_batch');
-var apnFeedback = require('apn').Feedback;
-var feedback = require('../lib/feedback');
+'use strict';
+
+const helpers = require('./helpers');
+const common = require('../common');
+const resetBatch = require('./reset_batch');
+const apnFeedback = require('apn').Feedback;
+const APNFeedbackListener = require('../lib/apn_feedback_listener');
+const apnFeedbackListener = new APNFeedbackListener();
+apnFeedbackListener.listen();
 
 describe('Feedback', function() {
 
@@ -39,13 +43,13 @@ describe('Feedback', function() {
       });
     });
 
-    it('feedback.service should be an apn.Feedback object', function(done) {
-      feedback.service.should.be.instanceof(apnFeedback);
+    it('apnFeedbackListener.listener should be an apn.Feedback object', function(done) {
+      apnFeedbackListener.listener.should.be.instanceof(apnFeedback);
       done();
     });
 
     it('emit "feedback"', function(done) {
-      feedback.service.emit('feedback', [{device: 'abc123', time: new Date().getTime() }]);
+      apnFeedbackListener.listener.emit('feedback', [{device: 'abc123', time: new Date().getTime() }]);
       done();
     });
 
@@ -69,12 +73,12 @@ describe('Feedback', function() {
     });
 
     it('should not break emit "feedback"', function(done) {
-      feedback.service.emit('feedback', []);
+      apnFeedbackListener.listener.emit('feedback', []);
       done();
     });
 
     it('emit "feedback" with 2 args', function(done) {
-      feedback.service.emit('feedback', new Date().getTime(), '123abc');
+      apnFeedbackListener.listener.emit('feedback', new Date().getTime(), '123abc');
       done();
     });
 

@@ -1,3 +1,9 @@
+/*
+ *  Yodel
+ *  by Spire Labs
+ *  MIT Licensed
+ */
+
 'use strict';
 
 const common = require('../../common');
