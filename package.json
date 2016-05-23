@@ -34,6 +34,6 @@
     "node-inspector": "^0.12.3",
     "should": "^8.0.0"
   },
-  "license": "Apache-2.0",
-  "engine": "node >= 0.10.x"
+  "license": "MIT",
+  "engine": "node >= 4.x"
 }

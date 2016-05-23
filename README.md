@@ -23,25 +23,12 @@ rpush yodel:notify '{"user_id":5, "message":"This is a test", "payload": {"sampl
 ```
 
 ## Getting Started
-Yodel is meant to run as an independent Node service on Node 0.10.x and up to Node 5.x. It
+Yodel is meant to run as an independent Node service on Node 4.x and up to Node 6.x. It
 requires connections to Redis and MySQL servers.
 
 
-
-### Adding Config Files
-Of the 7 supported config files, only 1 is required. All have corresponding sample
-files in the config directory.
-
-* knexfile.js (required)
-* redis.json (optional)
-* redis_events.json (optional)
-* apn.json (optional)
-* gcm.json (optional)
-* sentry.json (optional)
-* ping.json (optional)
-
-When writing apn.json, keep in mind that all of the options in that file are passed directly
-to the [node-apn](https://github.com/argon/node-apn) package. You can see a [list of supported options](https://github.com/argon/node-apn/blob/master/doc/connection.markdown) in their documentation.
+### Config
+Yodel relies on environment variables for config. In development and test environments we support `dotenv` files (`.env.development` and `.env.test`). We've include `.env.sample` to use as a reference. All environment variables are referenced exclusively in `common.js`.
 
 ### DB and Package Setup
 Ensure that you have MySQL and Redis running, and that you're MySQL server has a database
@@ -114,7 +101,7 @@ If a valid `ping` config is present for the current environment, Yodel will ping
 
 ## Events
 
-If a `redis_events` config is present for the current environment, Yodel will publish
+If the `REDIS_EVENTS_HOST` environment variable is set, Yodel will publish
 events to the `yodel:events` key. Those will be JSON strings in the following format:
 
 ```

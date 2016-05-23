@@ -1,6 +1,19 @@
 **Yodel follows [Semantic Versioning](http://semver.org/)**
 ## Change Log
 
+**1.0.0** - <small>_2016-05-23_</small> -
+
+##### Added
+* Docker support
+* Environment based config
+* ES6 + ESLint
+* Dotenv with sample config file
+
+##### Removed
+* Support for Node 0.x
+* JSON config samples (replaced with dotenv sample)
+
+
 **0.2.0** - <small>_2015-12-08_</small> -
 
 ##### Added
