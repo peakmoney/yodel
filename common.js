@@ -1,5 +1,9 @@
 'use strict';
 
+if (!process.env.NODE_ENV) {
+  process.env.NODE_ENV = 'development';
+}
+
 const common = module.exports = {};
 const Promise = require('bluebird');
 const raven = require('raven');
@@ -21,6 +25,7 @@ if (dotenvPath) {
 }
 
 function parseBoolean(val) {
+  if (typeof val === 'undefined') { return undefined; }
   return JSON.parse(val);
 }
 

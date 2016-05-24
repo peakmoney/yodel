@@ -1,2 +1,14 @@
-#!/bin/bash
-./node_modules/knex/lib/bin/cli.js migrate:latest
+#!/usr/bin/env node
+
+'use strict';
+
+const common = require('../common');
+
+common.knex.migrate.latest().nodeify((migrateErr) => {
+  if (migrateErr) {
+    console.error('Error running migration:', migrateErr);
+  } else {
+    console.error('Migration completed successfully');
+  }
+  process.exit();
+});
