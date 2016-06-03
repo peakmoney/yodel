@@ -1,0 +1,8 @@
+.DS_Store
+.env
+.env.*
+.eslintignore
+.eslintrc
+.gitignore
+.travis.yml
+node_modules

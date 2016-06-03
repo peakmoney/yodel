@@ -1,7 +1,7 @@
 **Yodel follows [Semantic Versioning](http://semver.org/)**
 ## Change Log
 
-**1.0.0** - <small>_2016-05-23_</small> -
+**1.0.0** - <small>_2016-06-03_</small> -
 
 ##### Added
 * Docker support

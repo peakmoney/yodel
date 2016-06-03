@@ -1,6 +1,7 @@
 {
   "name": "yodel",
-  "version": "0.2.0",
+  "version": "1.0.0",
+  "repository": "https://github.com/SpireTeam/yodel",
   "description": "A lightweight server to simplify Android and iOS push notifications",
   "contributors": [
     "Rob Scott",
@@ -9,7 +10,8 @@
   ],
   "scripts": {
     "test": "test/run",
-    "start": "node app.js"
+    "start": "node app.js",
+    "migrate": "tasks/migrate"
   },
   "dependencies": {
     "apn": "1.7.x",

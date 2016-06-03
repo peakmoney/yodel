@@ -1,7 +1,13 @@
 {
   "extends": "airbnb",
+  "env": {
+    "node": true,
+  },
   "rules": {
-    "strict": [ 2, "global" ]
+    "strict": [ 2, "safe" ]
+  },
+  "parserOptions": {
+    "sourceType": "script"
   },
   "ecmaFeatures": {
     "modules": false
