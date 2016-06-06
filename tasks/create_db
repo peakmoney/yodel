@@ -9,6 +9,8 @@ const segments = config.knex.connection.split('/');
 const dbName = segments[3];
 const dblessConn = `${segments.slice(0, 3).join('/')}/`;
 
+console.log(`Attempting to create ${dbName} using ${dblessConn} (derived from ${config.knex.connection})`);
+
 knex({ client: 'mysql', connection: dblessConn })
     .raw(`create database ${dbName}`)
     .then(() => {
