@@ -11,7 +11,9 @@ const dblessConn = `${segments.slice(0, 3).join('/')}/`;
 
 console.log(`Attempting to create ${dbName} using ${dblessConn} (derived from ${config.knex.connection})`);
 
-knex({ client: 'mysql', connection: { user: 'travis' } })
+console.log(process.env)
+
+knex({ client: 'mysql', connection: { user: 'travis', host: '127.0.0.1' } })
     .raw(`create database ${dbName}`)
     .then(() => {
       console.log(`${dbName} database created succesfully`);
