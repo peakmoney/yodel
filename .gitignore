@@ -31,7 +31,7 @@ node_modules
 config/*
 
 # Dotenv
-.env.*
+.env*
 !.env.sample
 
 # Jsdoc directory

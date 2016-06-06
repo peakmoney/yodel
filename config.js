@@ -1,22 +1,17 @@
 'use strict';
 
-const fs = require('fs');
 const dotenv = require('dotenv');
 
-process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+const env = process.env.NODE_ENV || 'development';
 
-let dotenvPath;
-['./.env', `./.env.${process.env.NODE_ENV}`].forEach(path => {
-  try {
-    if (fs.statSync(path).isFile()) { dotenvPath = path; }
-  } catch (e) {
-    // nothing to see here
-  }
+// Load ENV specific
+dotenv.config({
+  path: `.env.${env}`,
+  silent: true,
 });
 
-if (dotenvPath) {
-  dotenv.config({ path: dotenvPath });
-}
+// Load Defaults
+dotenv.config();
 
 function parseBoolean(val) {
   if (typeof val === 'undefined') { return undefined; }
