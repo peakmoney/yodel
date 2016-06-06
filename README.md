@@ -28,15 +28,15 @@ requires connections to Redis and MySQL servers.
 
 
 ### Config
-Yodel relies on environment variables for config. In development and test environments we support `dotenv` files (`.env.development` and `.env.test`). We've include `.env.sample` to use as a reference. All environment variables are referenced exclusively in `common.js`.
+Yodel relies on environment variables for config. In development and test environments we support `dotenv` files. That can be the traditional `.env` file or `.env.development` and `.env.test` if you want to specify environments. We've included `.env.sample` to use as a reference. All environment variables are referenced exclusively in `config.js`.
 
 ### DB and Package Setup
-Ensure that you have MySQL and Redis running, and that you're MySQL server has a database
-matching you're knexfile. At that point, install npm packages and run the DB migration:
+Ensure that you have MySQL and Redis running, and that your `.env` is accurate. At that point, install npm packages, create the database, and run migrations:
 
 ```
 npm install
-tasks/migrate
+npm run db:create
+npm run db:migrate
 ```
 
 ### Starting Yodel
@@ -44,7 +44,7 @@ You should be ready to start Yodel now. At the most basic level, that can be acc
 with the following command.
 
 ```
-node app.js
+npm run start
 ```
 
 Yodel does also support the following options:

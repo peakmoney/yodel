@@ -6,9 +6,9 @@ node_js:
 
 before_script:
   - npm install
-  - mysql -e 'create database yodel_test;'
-  - cp .env.sample .env.test
-  - NODE_ENV=test tasks/migrate
+  - cp .env.sample .env
+  - npm run db:create
+  - npm run db:migrate
 
 services:
   - redis-server

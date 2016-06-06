@@ -1,0 +1,25 @@
+#!/usr/bin/env node
+
+'use strict';
+
+const config = require('../config');
+const knex = require('knex');
+
+const segments = config.knex.connection.split('/');
+const dbName = segments[3];
+const dblessConn = `${segments.slice(0, 3).join('/')}/`;
+
+knex({ client: 'mysql', connection: dblessConn })
+    .raw(`create database ${dbName}`)
+    .then(() => {
+      console.log(`${dbName} database created succesfully`);
+      process.exit();
+    }).catch((e) => {
+      if (e && e.code === 'ER_DB_CREATE_EXISTS') {
+        console.log(`${dbName} already exists`);
+        process.exit();
+      }
+      console.error('There was an error creating this database:');
+      console.error(e);
+      process.exit(1);
+    });
