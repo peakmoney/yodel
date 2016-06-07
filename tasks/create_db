@@ -4,13 +4,12 @@
 
 const config = require('../config');
 const knex = require('knex');
-const _ = require('lodash');
 
 // This is all a terrible hack until Knex accepts my pull request to support
 // database urls without passwords.
 let dblessConn;
 let dbName;
-if (_.isString(config.knex.connection)) {
+if (typeof config.knex.connection === "string") {
   const segments = config.knex.connection.split('/');
   dbName = segments[3];
   dblessConn = `${segments.slice(0, 3).join('/')}/`;
