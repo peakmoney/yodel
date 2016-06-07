@@ -4,7 +4,7 @@ const config = require('./config');
 
 module.exports = {
   client: 'mysql',
-  connection: connectionConfig,
+  connection: config.knex.connection,
   migrations: {
     directory: `${__dirname}/migrations`,
   },
