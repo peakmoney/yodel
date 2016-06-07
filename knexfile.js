@@ -2,11 +2,9 @@
 
 const config = require('./config');
 
-console.log(`Using ${config.knex.connection} as DB credentials`);
-
 module.exports = {
   client: 'mysql',
-  connection: 'mysql://travis:@127.0.0.1:3306/yodel_test',
+  connection: connectionConfig,
   migrations: {
     directory: `${__dirname}/migrations`,
   },

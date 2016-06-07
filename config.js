@@ -18,6 +18,13 @@ function parseBoolean(val) {
   return JSON.parse(val);
 }
 
+// A hack until my related Knex pull request is accepted
+let knexConnection = process.env.DATABASE_URL;
+if (knexConnection === 'mysql://travis@127.0.0.1:3306/yodel_test') {
+  knexConnection = { user: 'travis', database: 'yodel_test' };
+}
+
+
 // Only APN, GCM, and Knex (MySQL) config are actually required here
 module.exports = {
   apn: {
@@ -40,7 +47,7 @@ module.exports = {
   },
   knex: {
     client: 'mysql',
-    connection: process.env.DATABASE_URL,
+    connection: knexConnection,
   },
   ping: {
     run_url: process.env.PING_RUN_URL,

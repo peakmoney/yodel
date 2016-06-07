@@ -4,16 +4,23 @@
 
 const config = require('../config');
 const knex = require('knex');
+const _ = require('lodash');
 
-const segments = config.knex.connection.split('/');
-const dbName = segments[3];
-const dblessConn = `${segments.slice(0, 3).join('/')}/`;
+// This is all a terrible hack until Knex accepts my pull request to support
+// database urls without passwords.
+let dblessConn;
+let dbName;
+if (_.isString(config.knex.connection)) {
+  const segments = config.knex.connection.split('/');
+  dbName = segments[3];
+  dblessConn = `${segments.slice(0, 3).join('/')}/`;
+} else {
+  dbName = config.knex.connection.database;
+  dblessConn = { user: config.knex.connection.user };
+}
 
-console.log(`Attempting to create ${dbName} using ${dblessConn} (derived from ${config.knex.connection})`);
 
-console.log(process.env)
-
-knex({ client: 'mysql', connection: { user: 'travis', host: '127.0.0.1' } })
+knex({ client: 'mysql', connection: dblessConn })
     .raw(`create database ${dbName}`)
     .then(() => {
       console.log(`${dbName} database created succesfully`);
