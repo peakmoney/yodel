@@ -9,7 +9,7 @@ const knex = require('knex');
 // database urls without passwords.
 let dblessConn;
 let dbName;
-if (typeof config.knex.connection === "string") {
+if (typeof config.knex.connection === 'string') {
   const segments = config.knex.connection.split('/');
   dbName = segments[3];
   dblessConn = `${segments.slice(0, 3).join('/')}/`;

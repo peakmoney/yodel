@@ -19,6 +19,7 @@
     "apn": "1.7.x",
     "bluebird": "~3.0.5",
     "commander": "^2.9.0",
+    "dotenv": "^2.0.0",
     "jdg": "^1.0.1",
     "knex": "0.9.x",
     "mysql": "2.9.x",
@@ -28,7 +29,6 @@
     "yodel-gcm": "^0.9.21"
   },
   "devDependencies": {
-    "dotenv": "^2.0.0",
     "eslint": "^2.10.2",
     "eslint-config-airbnb": "^9.0.1",
     "eslint-plugin-import": "^1.8.0",

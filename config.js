@@ -1,7 +1,6 @@
 'use strict';
 
 const dotenv = require('dotenv');
-
 const env = process.env.NODE_ENV || 'development';
 
 // Load ENV specific
@@ -11,7 +10,10 @@ dotenv.config({
 });
 
 // Load Defaults
-dotenv.config();
+dotenv.config({
+  silent: true,
+});
+
 
 function parseBoolean(val) {
   if (typeof val === 'undefined') { return undefined; }

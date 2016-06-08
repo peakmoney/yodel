@@ -45,7 +45,7 @@ common.redis = common.newRedisClient('redis');
 
 // Redis Events (for Yodel Stats)
 if (config.redisEvents.host) {
-  const rEventsClient = common.newRedisClient('redis_events');
+  const rEventsClient = common.newRedisClient('redisEvents');
   common.publishEvent = function publishEvent(event, callback) {
     return rEventsClient
       .publishAsync('yodel:events', JSON.stringify(event))
