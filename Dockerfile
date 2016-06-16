@@ -12,5 +12,4 @@ RUN npm install --production
 # Now bring in the source code.
 COPY . /usr/src/yodel
 
-EXPOSE 3402
 CMD node app.js
