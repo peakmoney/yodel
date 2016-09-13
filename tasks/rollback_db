@@ -1,0 +1,6 @@
+#!/usr/bin/env node
+
+'use strict';
+
+const common = require('../common');
+common.knex.migrate.rollback().asCallback(process.exit);

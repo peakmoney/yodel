@@ -12,8 +12,8 @@
     "test": "test/run",
     "start": "node app.js",
     "db:create": "tasks/create_db",
-    "db:migrate": "knex migrate:latest",
-    "db:rollback": "knex migrate:rollback"
+    "db:migrate": "tasks/migrate_db",
+    "db:rollback": "tasks/rollback_db"
   },
   "dependencies": {
     "apn": "1.7.x",
