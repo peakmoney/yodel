@@ -33,7 +33,6 @@ module.exports = {
     cert: process.env.APN_CERT,
     key: process.env.APN_KEY,
     production: parseBoolean(process.env.APN_PRODUCTION),
-    sandbox: parseBoolean(process.env.APN_SANDBOX),
   },
   apnFeedback: {
     cert: process.env.APN_FEEDBACK_CERT,
@@ -41,7 +40,6 @@ module.exports = {
     batchFeedback: process.env.APN_FEEDBACK_BATCH_FEEDBACK,
     interval: process.env.APN_FEEDBACK_INTERVAL,
     production: parseBoolean(process.env.APN_FEEDBACK_PRODUCTION),
-    sandbox: parseBoolean(process.env.APN_FEEDBACK_SANDBOX),
   },
   gcm: {
     server_api_key: process.env.GCM_SERVER_API_KEY,
