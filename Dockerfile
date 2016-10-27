@@ -1,4 +1,7 @@
-FROM node:6.2
+FROM node:6.9
+
+# This seems like the most sensible place to do upgrades, but it's likely not needed for every build
+RUN apt-get update && apt-get upgrade -y
 
 # Setup the base app directory
 RUN mkdir /usr/src/yodel
